@@ -13,9 +13,14 @@ export const kerningPairs: KerningPair[] = [
   { left: 'A', right: 'V', value: -60 },
   { left: 'A', right: 'W', value: -50 },
   { left: 'A', right: 'Y', value: -60 },
+  { left: 'A', right: 'T', value: -70 },
   { left: 'V', right: 'A', value: -60 },
   { left: 'W', right: 'A', value: -50 },
   { left: 'Y', right: 'A', value: -60 },
+
+  // K combinations
+  { left: 'K', right: 'A', value: -50 },
+  { left: 'K', right: 'O', value: -40 },
 
   // T combinations
   { left: 'T', right: 'a', value: -80 },
@@ -30,6 +35,9 @@ export const kerningPairs: KerningPair[] = [
   { left: 'T', right: 'G', value: -50 },
   { left: 'T', right: 'O', value: -50 },
   { left: 'T', right: 'Q', value: -50 },
+  // T punctuation
+  { left: 'T', right: 'period', value: -60 },
+  { left: 'T', right: 'comma', value: -60 },
 
   // F combinations
   { left: 'F', right: 'a', value: -90 },
@@ -37,12 +45,14 @@ export const kerningPairs: KerningPair[] = [
   { left: 'F', right: 'o', value: -80 },
   { left: 'F', right: 'r', value: -60 },
   { left: 'F', right: 'A', value: -80 },
+  { left: 'F', right: 't', value: -70 },
 
   // L combinations
   { left: 'L', right: 'V', value: -70 },
   { left: 'L', right: 'W', value: -60 },
   { left: 'L', right: 'Y', value: -80 },
   { left: 'L', right: 'T', value: -80 },
+  { left: 'L', right: 'A', value: -60 },
   { left: 'L', right: 'o', value: -30 },
   { left: 'L', right: 'u', value: -20 },
 
@@ -51,6 +61,18 @@ export const kerningPairs: KerningPair[] = [
   { left: 'P', right: 'e', value: -60 },
   { left: 'P', right: 'o', value: -60 },
   { left: 'P', right: 'A', value: -80 },
+
+  // V/W/Y + A (from spec)
+  { left: 'V', right: 'A', value: -60 },
+  { left: 'W', right: 'A', value: -50 },
+  { left: 'Y', right: 'A', value: -60 },
+  // V/W/Y punctuation
+  { left: 'V', right: 'period', value: -60 },
+  { left: 'V', right: 'comma', value: -60 },
+  { left: 'W', right: 'period', value: -50 },
+  { left: 'W', right: 'comma', value: -50 },
+  { left: 'Y', right: 'period', value: -60 },
+  { left: 'Y', right: 'comma', value: -60 },
 
   // V combinations
   { left: 'V', right: 'a', value: -60 },
@@ -68,6 +90,7 @@ export const kerningPairs: KerningPair[] = [
   { left: 'Y', right: 'e', value: -70 },
   { left: 'Y', right: 'o', value: -70 },
   { left: 'Y', right: 'u', value: -50 },
+  { left: 'Y', right: 'o', value: -50 }, // Yo
 
   // Quote combinations
   { left: 'quotedbl', right: 'A', value: -100 },
@@ -83,9 +106,20 @@ export const kerningPairs: KerningPair[] = [
   { left: 'comma', right: 'quotedbl', value: -30 },
   { left: 'comma', right: 'quotesingle', value: -30 },
 
+  // r combinations (ra re ro)
+  { left: 'r', right: 'a', value: -20 },
+  { left: 'r', right: 'e', value: -25 },
+  { left: 'r', right: 'o', value: -20 },
+
+  // W combinations extended (We Wo)
+  { left: 'W', right: 'e', value: -50 },
+  { left: 'W', right: 'o', value: -50 },
+
   // Number combinations
   { left: 'one', right: 'zero', value: -20 },
   { left: 'one', right: 'one', value: -30 },
+  { left: 'seven', right: 'A', value: -40 },
+  { left: 'seven', right: 'T', value: -40 },
 
   // Cyrillic kerning
   { left: 'А', right: 'В', value: -40 },

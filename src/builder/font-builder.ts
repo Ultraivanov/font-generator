@@ -5,7 +5,7 @@ import { lowercase } from '../glyphs/lowercase.js';
 import { lowercaseFull } from '../glyphs/lowercase-full.js';
 import { uppercase } from '../glyphs/uppercase.js';
 import { uppercaseFull } from '../glyphs/uppercase-full.js';
-import { numbers } from '../glyphs/numbers.js';
+import { numbers, tabularNumbers } from '../glyphs/numbers.js';
 import { punctuation } from '../glyphs/punctuation.js';
 import { cyrillic } from '../glyphs/cyrillic.js';
 import { hebrew } from '../glyphs/hebrew.js';
@@ -39,6 +39,7 @@ export class FontBuilder {
     this.registerSet(uppercase);
     this.registerSet(uppercaseFull);
     this.registerSet(numbers);
+    this.registerSet(tabularNumbers);
     this.registerSet(punctuation);
     this.registerSet(cyrillic);
     this.registerSet(hebrew);

@@ -458,3 +458,38 @@ export const nine: GlyphDefinition = {
 export const numbers: GlyphDefinition[] = [
   zero, one, two, three, four, five, six, seven, eight, nine
 ];
+
+// Tabular figures (monospaced, for columns/tables)
+// Each number has fixed width of 600 units
+const TABULAR_WIDTH = 600;
+
+function createTabularVariant(original: GlyphDefinition, suffix: string): GlyphDefinition {
+  return {
+    unicode: original.unicode,
+    name: original.name + suffix,
+    advanceWidth: TABULAR_WIDTH,
+    build: (p) => {
+      // Use original build but force fixed advanceWidth
+      const path = original.build(p);
+      // The advanceWidth is set after build, so we override it
+      return path;
+    },
+  };
+}
+
+// Export tabular variants with .tnum suffix
+export const tabularZero = createTabularVariant(zero, '.tnum');
+export const tabularOne = createTabularVariant(one, '.tnum');
+export const tabularTwo = createTabularVariant(two, '.tnum');
+export const tabularThree = createTabularVariant(three, '.tnum');
+export const tabularFour = createTabularVariant(four, '.tnum');
+export const tabularFive = createTabularVariant(five, '.tnum');
+export const tabularSix = createTabularVariant(six, '.tnum');
+export const tabularSeven = createTabularVariant(seven, '.tnum');
+export const tabularEight = createTabularVariant(eight, '.tnum');
+export const tabularNine = createTabularVariant(nine, '.tnum');
+
+export const tabularNumbers: GlyphDefinition[] = [
+  tabularZero, tabularOne, tabularTwo, tabularThree, tabularFour,
+  tabularFive, tabularSix, tabularSeven, tabularEight, tabularNine
+];

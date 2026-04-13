@@ -371,11 +371,183 @@ export const parenright: GlyphDefinition = {
   },
 };
 
+// Euro (€)
+export const euro: GlyphDefinition = {
+  unicode: 0x20ac,
+  name: 'euro',
+  advanceWidth: 0,
+  build: (p: GlyphParams) => {
+    const builder = createPath();
+    const sb = p.sidebearing;
+    const stem = p.weight;
+    const capHeight = p.capHeight;
+    const overshoot = p.overshoot;
+
+    const fullWidth = capHeight * 0.8 + sb * 2;
+    const cx = fullWidth / 2;
+    const cy = capHeight / 2;
+    const r = fullWidth / 2 - stem;
+    const k = 0.5522847498;
+
+    // C-shape arc (outer)
+    const outerR = r + stem / 2 + overshoot;
+    builder
+      .moveTo(cx + outerR, cy - outerR * 0.5)
+      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx, cy + outerR)
+      .curveTo(cx - outerR * k, cy + outerR, cx - outerR, cy + outerR * k, cx - outerR, cy + outerR * 0.5);
+
+    // Inner arc back
+    const innerR = r - stem / 2;
+    builder.lineTo(cx - innerR, cy + innerR * 0.3);
+    builder
+      .curveTo(cx - innerR, cy - innerR * k, cx - innerR * k, cy - innerR, cx, cy - innerR)
+      .curveTo(cx + innerR * k, cy - innerR, cx + innerR * 0.3, cy - innerR * k, cx + innerR * 0.5, cy);
+
+    builder.closePath();
+
+    // Two horizontal bars
+    const barY1 = cy + stem;
+    const barY2 = cy - stem * 0.5;
+    const barLeft = cx - outerR * 0.6;
+    const barRight = cx + stem;
+    builder.hStem(barLeft, barY1, barRight - barLeft, stem * 0.8);
+    builder.hStem(barLeft, barY2, barRight - barLeft, stem * 0.8);
+
+    euro.advanceWidth = fullWidth;
+    return builder.build();
+  },
+};
+
+// Dollar ($)
+export const dollar: GlyphDefinition = {
+  unicode: 0x0024,
+  name: 'dollar',
+  advanceWidth: 0,
+  build: (p: GlyphParams) => {
+    const builder = createPath();
+    const sb = p.sidebearing;
+    const stem = p.weight;
+    const capHeight = p.capHeight;
+    const overshoot = p.overshoot;
+
+    const fullWidth = capHeight * 0.7 + sb * 2;
+    const cx = fullWidth / 2;
+    const cy = capHeight / 2;
+    const r = fullWidth / 2 - stem;
+    const k = 0.5522847498;
+
+    // S-shape: upper curve
+    const outerR = r + stem / 2 + overshoot;
+    builder
+      .moveTo(cx + outerR * 0.5, cy - outerR)
+      .curveTo(cx + outerR * k, cy - outerR, cx + outerR, cy - outerR * k, cx + outerR, cy)
+      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * 0.5, cy + outerR, cx, cy + outerR);
+
+    // Lower curve back
+    const innerR = r - stem / 2;
+    builder
+      .curveTo(cx - innerR * k, cy + innerR, cx - innerR, cy + innerR * k, cx - innerR, cy)
+      .curveTo(cx - innerR, cy - innerR * k, cx - innerR * 0.5, cy - innerR, cx - innerR * 0.5, cy - innerR * 0.8);
+
+    // Vertical stem through middle
+    builder.vStem(cx, stem, capHeight - stem * 2, stem);
+
+    dollar.advanceWidth = fullWidth;
+    return builder.build();
+  },
+};
+
+// Currency: £ ¥ ¢ — simplified basic versions
+// Pound (£) - simplified as L with crossbars
+export const sterling: GlyphDefinition = {
+  unicode: 0x00a3,
+  name: 'sterling',
+  advanceWidth: 0,
+  build: (p: GlyphParams) => {
+    const builder = createPath();
+    const sb = p.sidebearing;
+    const stem = p.weight;
+    const capHeight = p.capHeight;
+
+    const fullWidth = capHeight * 0.6 + sb * 2;
+    const stemX = sb + stem;
+
+    // L shape
+    builder.vStem(stemX, 0, capHeight, stem);
+    builder.hStem(stemX, capHeight / 2, fullWidth - sb - stemX, stem);
+
+    // Top hook
+    builder.hStem(stemX, capHeight - stem, stem * 2, stem);
+
+    sterling.advanceWidth = fullWidth;
+    return builder.build();
+  },
+};
+
+// Arrows
+export const arrowleft: GlyphDefinition = {
+  unicode: 0x2190,
+  name: 'arrowleft',
+  advanceWidth: 0,
+  build: (p: GlyphParams) => {
+    const builder = createPath();
+    const sb = p.sidebearing;
+    const stem = p.weight;
+    const xHeight = p.xHeight;
+
+    const fullWidth = xHeight * 1.2 + sb * 2;
+    const cy = xHeight / 2;
+    const headSize = xHeight * 0.3;
+
+    // Arrow head (left)
+    builder.moveTo(sb, cy);
+    builder.lineTo(sb + headSize, cy + headSize);
+    builder.lineTo(sb + headSize, cy - headSize);
+    builder.closePath();
+
+    // Shaft
+    builder.hStem(sb + headSize * 0.8, cy - stem / 2, fullWidth - sb - headSize * 2, stem);
+
+    arrowleft.advanceWidth = fullWidth;
+    return builder.build();
+  },
+};
+
+export const arrowright: GlyphDefinition = {
+  unicode: 0x2192,
+  name: 'arrowright',
+  advanceWidth: 0,
+  build: (p: GlyphParams) => {
+    const builder = createPath();
+    const sb = p.sidebearing;
+    const stem = p.weight;
+    const xHeight = p.xHeight;
+
+    const fullWidth = xHeight * 1.2 + sb * 2;
+    const cy = xHeight / 2;
+    const headSize = xHeight * 0.3;
+
+    // Arrow head (right)
+    builder.moveTo(fullWidth - sb, cy);
+    builder.lineTo(fullWidth - sb - headSize, cy + headSize);
+    builder.lineTo(fullWidth - sb - headSize, cy - headSize);
+    builder.closePath();
+
+    // Shaft
+    builder.hStem(sb, cy - stem / 2, fullWidth - sb - headSize * 2, stem);
+
+    arrowright.advanceWidth = fullWidth;
+    return builder.build();
+  },
+};
+
 // Export all punctuation
 export const punctuation: GlyphDefinition[] = [
   space, period, comma, colon, semicolon,
   hyphen, endash, emdash,
   exclam, question,
   quotesingle, quotedbl,
-  parenleft, parenright
+  parenleft, parenright,
+  euro, dollar, sterling,
+  arrowleft, arrowright
 ];
