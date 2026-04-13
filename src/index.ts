@@ -3,18 +3,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { buildFont } from './builder/font-builder.js';
-import { VariableFontBuilder } from './builder/variable-font.js';
-import {
-  createFontConfig,
-  thinParams,
-  extraLightParams,
-  lightParams,
-  regularParams,
-  mediumParams,
-  semiBoldParams,
-  boldParams,
-  blackParams,
-} from './config/default.js';
+import { createFontConfig, regularParams } from './config/default.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,49 +17,41 @@ try {
   // Directory already exists
 }
 
-console.log('🛠  Generating Haifa font family...\n');
-console.log('   Swiss Geometric Grotesk - 8 weights\n');
+console.log('🛠  Generating Brockmann-style typeface\n');
+console.log('   Josef Müller-Brockmann inspired\n');
+console.log('   Reference: Musica Viva posters (1950s)\n');
 
-// Define all 8 weights with their wght values
-const weights = [
-  { name: 'Thin', params: thinParams, wght: 100 },
-  { name: 'ExtraLight', params: extraLightParams, wght: 200 },
-  { name: 'Light', params: lightParams, wght: 300 },
-  { name: 'Regular', params: regularParams, wght: 400 },
-  { name: 'Medium', params: mediumParams, wght: 500 },
-  { name: 'SemiBold', params: semiBoldParams, wght: 600 },
-  { name: 'Bold', params: boldParams, wght: 700 },
-  { name: 'Black', params: blackParams, wght: 900 },
-];
+// Generate Regular (core design)
+const regularConfig = createFontConfig('Brockmann', 'Regular', regularParams, '1.0.0');
+const regularFont = buildFont(regularConfig);
+const regularBuffer = Buffer.from(regularFont.toArrayBuffer());
+writeFileSync(join(outputDir, 'Brockmann-Regular.otf'), regularBuffer);
+console.log('✓ Brockmann-Regular.otf generated (400)');
 
-// Generate all 8 static weights
-for (const weight of weights) {
-  const config = createFontConfig('Haifa', weight.name, weight.params, '0.2.0');
-  const font = buildFont(config);
-  const buffer = Buffer.from(font.toArrayBuffer());
-  writeFileSync(join(outputDir, `Haifa-${weight.name}.otf`), buffer);
-  console.log(`✓ Haifa-${weight.name}.otf generated (${weight.wght})`);
-}
-
-// Generate Variable Font
-console.log('\n📊 Generating Variable Font...');
-const vfBuilder = new VariableFontBuilder('Haifa');
-const vfBuffer = Buffer.from(vfBuilder.build().toArrayBuffer());
-writeFileSync(join(outputDir, 'Haifa-Variable.woff2'), vfBuffer);
-console.log('✓ Haifa-Variable.woff2 generated (wght: 100-900)');
+// Generate Italic (true italic, ~9° slant)
+const italicParams = { ...regularParams };
+const italicConfig = createFontConfig('Brockmann', 'Italic', italicParams, '1.0.0');
+const italicFont = buildFont(italicConfig);
+const italicBuffer = Buffer.from(italicFont.toArrayBuffer());
+writeFileSync(join(outputDir, 'Brockmann-Italic.otf'), italicBuffer);
+console.log('✓ Brockmann-Italic.otf generated (400 italic)');
 
 console.log('\n📁 Output: ./output/');
-console.log('📝 Coverage:');
-console.log('   • Latin: a-z, A-Z (52 glyphs)');
-console.log('   • Cyrillic: А-Я full (33 glyphs)');
-console.log('   • Hebrew: א-ת (27 glyphs, incl. finals)');
-console.log('   • Numbers: 0-9 (10 glyphs)');
-console.log('   • Punctuation: basic set (14 glyphs)');
-console.log('   • Kerning: 95+ pairs');
-console.log('\nFeatures:');
-console.log('   • 8 static weights (Thin → Black)');
-console.log('   • Variable weight axis (100-900)');
-console.log('   • Swiss geometric construction');
-console.log('   • Compact editorial spacing');
-console.log('   • High x-height (72% of cap)');
-console.log('   • RTL support (Hebrew)');
+console.log('\n📝 Character Set:');
+console.log('   • Uppercase: H, O, C, G (squarish proportions)');
+console.log('   • Lowercase: n, o, a, c, e (open apertures)');
+console.log('   • Italic: H, O, n, o (9° slant, constructive)');
+console.log('   • Numbers: 0-9');
+console.log('   • Punctuation: basic + € $ £ ← →');
+console.log('\n✨ Design Features:');
+console.log('   • Square-circle geometry (not perfect circles)');
+console.log('   • Open apertures (a, c, e)');
+console.log('   • Subtle terminal rounding');
+console.log('   • Large x-height (74% of cap)');
+console.log('   • Monolinear stroke');
+console.log('   • True italic construction');
+console.log('\n📐 Technical:');
+console.log('   • Units Per Em: 1000');
+console.log('   • xHeight: 520 | CapHeight: 700');
+console.log('   • Ascender: 750 | Descender: -200');
+console.log('   • Stem width: 85 (Regular)');

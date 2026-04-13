@@ -1,28 +1,31 @@
 import { FontConfig, GlyphParams } from '../types.js';
 
-// Default configuration inspired by Swiss typography (Brockmann reference)
-// Using 1000 UPM (Units Per Em) for precision
+// Brockmann-style Swiss Grotesk metrics
+// Contemporary reinterpretation of 1950s International Typographic Style
+// Reference: Josef Müller-Brockmann's Musica Viva posters
 
 export const defaultMetrics = {
   unitsPerEm: 1000,
-  ascender: 800,
+  ascender: 750,        // Slightly shorter for tighter line spacing
   descender: -200,
-  xHeight: 500,
+  xHeight: 520,         // Large x-height (74% of cap) for legibility
   capHeight: 700,
 };
 
-// Regular weight parameters
+// Regular weight parameters — Brockmann style
 export const regularParams: GlyphParams = {
-  weight: 80,        // Stem width
+  weight: 85,        // Stem width — slightly heavier for presence
   width: 600,        // Standard glyph width
-  ascender: 800,
+  ascender: 750,     // Balanced with descender
   descender: -200,
-  xHeight: 500,
+  xHeight: 520,      // Large x-height (74% of cap)
   capHeight: 700,
-  overshoot: 10,     // Optical correction for round shapes
-  sidebearing: 50,   // Default left/right spacing
-  contrast: 1.0,     // No contrast for geometric sans
-  stress: 0,         // No stress (vertical axis)
+  overshoot: 12,     // Optical correction for square-round shapes
+  sidebearing: 45,   // Tight spacing for editorial use
+  contrast: 1.0,     // Monolinear stroke
+  stress: 0,         // Vertical axis (neutral)
+  // Terminal rounding: subtle (3-5 units)
+  terminalRound: 4,
 };
 
 // Bold weight parameters

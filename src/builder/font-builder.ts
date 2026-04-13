@@ -1,10 +1,9 @@
 import opentype from 'opentype.js';
 import { FontConfig, GlyphDefinition, GlyphParams } from '../types.js';
 import { toOpenTypePath, calculateBoundingBox } from '../core/opentype-converter.js';
-import { lowercase } from '../glyphs/lowercase.js';
-import { lowercaseFull } from '../glyphs/lowercase-full.js';
-import { uppercase } from '../glyphs/uppercase.js';
-import { uppercaseFull } from '../glyphs/uppercase-full.js';
+import { lowercase } from '../glyphs/lowercase-brockmann.js';
+import { uppercase } from '../glyphs/uppercase-brockmann.js';
+import { italic } from '../glyphs/italic-brockmann.js';
 import { numbers, tabularNumbers } from '../glyphs/numbers.js';
 import { punctuation } from '../glyphs/punctuation.js';
 import { cyrillic } from '../glyphs/cyrillic.js';
@@ -33,16 +32,16 @@ export class FontBuilder {
       path: new opentype.Path(),
     });
 
-    // Register all glyph sets
-    this.registerSet(lowercase);
-    this.registerSet(lowercaseFull);
+    // Register Brockmann-style glyph sets
     this.registerSet(uppercase);
-    this.registerSet(uppercaseFull);
+    this.registerSet(lowercase);
+    this.registerSet(italic);
     this.registerSet(numbers);
     this.registerSet(tabularNumbers);
     this.registerSet(punctuation);
-    this.registerSet(cyrillic);
-    this.registerSet(hebrew);
+    // Cyrillic and Hebrew temporarily disabled for core Latin focus
+    // this.registerSet(cyrillic);
+    // this.registerSet(hebrew);
   }
 
   register(glyph: GlyphDefinition): void {

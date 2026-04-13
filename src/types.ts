@@ -38,6 +38,8 @@ export interface GlyphParams {
   // Geometric parameters
   contrast: number;
   stress: number;
+  // Terminal rounding for Brockmann-style subtle curves
+  terminalRound?: number;
 }
 
 export interface FontMetrics {
