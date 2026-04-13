@@ -1,18 +1,39 @@
 # Haifa — Programmatic Font Generator
 
-A geometric sans-serif typeface for the Haifa City Design System. Inspired by Constructivist architecture and Swiss International Typographic Style.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
 
-## Features
+> A geometric sans-serif typeface for the **Haifa City Design System**. Inspired by Constructivist architecture and Swiss International Typographic Style.
 
-- **Full Latin alphabet** — a-z, A-Z with optical corrections
-- **Cyrillic** — complete Russian alphabet (А-Я, 33 glyphs)
-- **Hebrew** — Aleph-Bet (22 letters) with RTL support
-- **Numbers & punctuation** — 0-9, basic punctuation marks
-- **Kerning** — 80+ pairs for critical combinations (Latin + Cyrillic + Hebrew)
-- **Variable Font** — weight axis wght: 100-700
-- **Parametric system** — adjust weight, width, contrast via code
+![Haifa Font Preview](https://github.com/Ultraivanov/font-generator/raw/main/preview.png)
 
-## Quick Start
+## 🌍 Language Versions
+
+- [English](README.md) (current)
+- [Русский](README.ru.md)
+
+## ✨ Features
+
+- **📝 Full Latin alphabet** — a-z, A-Z with optical corrections
+- **🇷🇺 Cyrillic** — complete Russian alphabet (А-Я, 33 glyphs)
+- **🇮🇱 Hebrew** — Aleph-Bet (א-ת, 27 glyphs incl. finals) with RTL support
+- **🔢 Numbers & punctuation** — 0-9, basic punctuation marks
+- **⚡ Kerning** — 95+ pairs for critical combinations (Latin + Cyrillic + Hebrew)
+- **🎛️ Variable Font** — weight axis wght: 100-700
+- **🔧 Parametric system** — adjust weight, width, contrast via code
+- **🎯 Total: ~136 glyphs**
+
+## 📦 Download
+
+Get the latest font files from the [releases page](../../releases) or download directly:
+
+- [Haifa-Regular.otf](../../raw/main/output/Haifa-Regular.otf)
+- [Haifa-Bold.otf](../../raw/main/output/Haifa-Bold.otf)
+- [Haifa-Light.otf](../../raw/main/output/Haifa-Light.otf)
+- [Haifa-Variable.woff2](../../raw/main/output/Haifa-Variable.woff2)
+
+## 🚀 Quick Start
 
 ```bash
 cd font-generator
