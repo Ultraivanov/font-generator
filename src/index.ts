@@ -4,7 +4,17 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { buildFont } from './builder/font-builder.js';
 import { VariableFontBuilder } from './builder/variable-font.js';
-import { createFontConfig, regularParams, boldParams, lightParams } from './config/default.js';
+import {
+  createFontConfig,
+  thinParams,
+  extraLightParams,
+  lightParams,
+  regularParams,
+  mediumParams,
+  semiBoldParams,
+  boldParams,
+  blackParams,
+} from './config/default.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,35 +29,35 @@ try {
 }
 
 console.log('🛠  Generating Haifa font family...\n');
-console.log('   Inspired by Constructivist architecture of Haifa\n');
+console.log('   Swiss Geometric Grotesk - 8 weights\n');
 
-// Generate Regular weight
-const regularConfig = createFontConfig('Haifa', 'Regular', regularParams, '0.1.0');
-const regularFont = buildFont(regularConfig);
-const regularBuffer = Buffer.from(regularFont.toArrayBuffer());
-writeFileSync(join(outputDir, 'Haifa-Regular.otf'), regularBuffer);
-console.log('✓ Haifa-Regular.otf generated (400)');
+// Define all 8 weights with their wght values
+const weights = [
+  { name: 'Thin', params: thinParams, wght: 100 },
+  { name: 'ExtraLight', params: extraLightParams, wght: 200 },
+  { name: 'Light', params: lightParams, wght: 300 },
+  { name: 'Regular', params: regularParams, wght: 400 },
+  { name: 'Medium', params: mediumParams, wght: 500 },
+  { name: 'SemiBold', params: semiBoldParams, wght: 600 },
+  { name: 'Bold', params: boldParams, wght: 700 },
+  { name: 'Black', params: blackParams, wght: 900 },
+];
 
-// Generate Bold weight
-const boldConfig = createFontConfig('Haifa', 'Bold', boldParams, '0.1.0');
-const boldFont = buildFont(boldConfig);
-const boldBuffer = Buffer.from(boldFont.toArrayBuffer());
-writeFileSync(join(outputDir, 'Haifa-Bold.otf'), boldBuffer);
-console.log('✓ Haifa-Bold.otf generated (700)');
-
-// Generate Light weight
-const lightConfig = createFontConfig('Haifa', 'Light', lightParams, '0.1.0');
-const lightFont = buildFont(lightConfig);
-const lightBuffer = Buffer.from(lightFont.toArrayBuffer());
-writeFileSync(join(outputDir, 'Haifa-Light.otf'), lightBuffer);
-console.log('✓ Haifa-Light.otf generated (100)');
+// Generate all 8 static weights
+for (const weight of weights) {
+  const config = createFontConfig('Haifa', weight.name, weight.params, '0.2.0');
+  const font = buildFont(config);
+  const buffer = Buffer.from(font.toArrayBuffer());
+  writeFileSync(join(outputDir, `Haifa-${weight.name}.otf`), buffer);
+  console.log(`✓ Haifa-${weight.name}.otf generated (${weight.wght})`);
+}
 
 // Generate Variable Font
 console.log('\n📊 Generating Variable Font...');
 const vfBuilder = new VariableFontBuilder('Haifa');
 const vfBuffer = Buffer.from(vfBuilder.build().toArrayBuffer());
 writeFileSync(join(outputDir, 'Haifa-Variable.woff2'), vfBuffer);
-console.log('✓ Haifa-Variable.woff2 generated (wght: 100-700)');
+console.log('✓ Haifa-Variable.woff2 generated (wght: 100-900)');
 
 console.log('\n📁 Output: ./output/');
 console.log('📝 Coverage:');
@@ -58,8 +68,9 @@ console.log('   • Numbers: 0-9 (10 glyphs)');
 console.log('   • Punctuation: basic set (14 glyphs)');
 console.log('   • Kerning: 95+ pairs');
 console.log('\nFeatures:');
-console.log('   • Variable weight axis (100-700)');
-console.log('   • Kerning for critical pairs');
-console.log('   • Geometric construction');
-console.log('   • For Haifa City Design System');
+console.log('   • 8 static weights (Thin → Black)');
+console.log('   • Variable weight axis (100-900)');
+console.log('   • Swiss geometric construction');
+console.log('   • Compact editorial spacing');
+console.log('   • High x-height (72% of cap)');
 console.log('   • RTL support (Hebrew)');

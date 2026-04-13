@@ -4,7 +4,17 @@
 import opentype from 'opentype.js';
 import { FontConfig } from '../types.js';
 import { FontBuilder } from './font-builder.js';
-import { createFontConfig, lightParams, regularParams, boldParams } from '../config/default.js';
+import {
+  createFontConfig,
+  thinParams,
+  extraLightParams,
+  lightParams,
+  regularParams,
+  mediumParams,
+  semiBoldParams,
+  boldParams,
+  blackParams,
+} from '../config/default.js';
 
 export interface VariableAxis {
   tag: string;
@@ -20,20 +30,25 @@ export interface VariableMaster {
   params: typeof lightParams;
 }
 
-// Define weight axis
+// Define weight axis (100-900)
 export const weightAxis: VariableAxis = {
   tag: 'wght',
   name: 'Weight',
   min: 100,
   default: 400,
-  max: 700,
+  max: 900,
 };
 
-// Define masters
+// Define all 8 masters
 export const masters: VariableMaster[] = [
-  { name: 'Light', weight: 100, params: lightParams },
+  { name: 'Thin', weight: 100, params: thinParams },
+  { name: 'ExtraLight', weight: 200, params: extraLightParams },
+  { name: 'Light', weight: 300, params: lightParams },
   { name: 'Regular', weight: 400, params: regularParams },
+  { name: 'Medium', weight: 500, params: mediumParams },
+  { name: 'SemiBold', weight: 600, params: semiBoldParams },
   { name: 'Bold', weight: 700, params: boldParams },
+  { name: 'Black', weight: 900, params: blackParams },
 ];
 
 export class VariableFontBuilder {

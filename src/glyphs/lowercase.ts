@@ -56,54 +56,40 @@ export const n: GlyphDefinition = {
   },
 };
 
+// o - Brockmann: perfect circle
 export const o: GlyphDefinition = {
   unicode: 0x006f,
   name: 'o',
   advanceWidth: 0,
   build: (p: GlyphParams) => {
+    const builder = createPath();
     const sb = p.sidebearing;
     const stem = p.weight;
     const xHeight = p.xHeight;
     const overshoot = p.overshoot;
 
-    // Oval shape for geometric sans
-    const width = xHeight * 0.85; // Slightly condensed
-    const fullWidth = width + sb * 2;
-    const cx = fullWidth / 2;
+    // Perfect circle: diameter = x-height
+    const bowlD = xHeight;
+    const r = bowlD / 2 - stem / 2;
+    const cx = sb + bowlD / 2;
     const cy = xHeight / 2;
-    const rx = width / 2 - stem / 2;
-    const ry = xHeight / 2 - stem / 2;
+    const k = 0.5522847498;
 
-    // Outer oval
-    const builder = createPath();
+    // Outer circle
+    const outerR = r + stem / 2 + overshoot;
+    builder.circle(cx, cy, outerR, overshoot);
 
-    // Draw as ellipse with overshoot
-    const c = 0.5522847498;
-    const outerRx = rx + stem / 2 + overshoot;
-    const outerRy = ry + stem / 2 + overshoot;
-    const innerRx = rx - stem / 2;
-    const innerRy = ry - stem / 2;
-
-    // Outer contour
+    // Inner circle (counter)
+    const innerR = r - stem / 2;
     builder
-      .moveTo(cx, cy - outerRy)
-      .curveTo(cx + outerRx * c, cy - outerRy, cx + outerRx, cy - outerRy * c, cx + outerRx, cy)
-      .curveTo(cx + outerRx, cy + outerRy * c, cx + outerRx * c, cy + outerRy, cx, cy + outerRy)
-      .curveTo(cx - outerRx * c, cy + outerRy, cx - outerRx, cy + outerRy * c, cx - outerRx, cy)
-      .curveTo(cx - outerRx, cy - outerRy * c, cx - outerRx * c, cy - outerRy, cx, cy - outerRy)
+      .moveTo(cx + innerR, cy)
+      .curveTo(cx + innerR, cy + innerR * k, cx + innerR * k, cy + innerR, cx, cy + innerR)
+      .curveTo(cx - innerR * k, cy + innerR, cx - innerR, cy + innerR * k, cx - innerR, cy)
+      .curveTo(cx - innerR, cy - innerR * k, cx - innerR * k, cy - innerR, cx, cy - innerR)
+      .curveTo(cx + innerR * k, cy - innerR, cx + innerR, cy - innerR * k, cx + innerR, cy)
       .closePath();
 
-    // Inner contour (counter)
-    builder
-      .moveTo(cx, cy - innerRy)
-      .curveTo(cx - innerRx * c, cy - innerRy, cx - innerRx, cy - innerRy * c, cx - innerRx, cy)
-      .curveTo(cx - innerRx, cy + innerRy * c, cx - innerRx * c, cy + innerRy, cx, cy + innerRy)
-      .curveTo(cx + innerRx * c, cy + innerRy, cx + innerRx, cy + innerRy * c, cx + innerRx, cy)
-      .curveTo(cx + innerRx, cy - innerRy * c, cx + innerRx * c, cy - innerRy, cx, cy - innerRy)
-      .closePath();
-
-    o.advanceWidth = fullWidth;
-
+    o.advanceWidth = sb + bowlD + sb;
     return builder.build();
   },
 };

@@ -36,7 +36,47 @@ export const boldParams: GlyphParams = {
 export const lightParams: GlyphParams = {
   ...regularParams,
   weight: 40,
+  sidebearing: 55,
+};
+
+// Thin weight parameters (wght: 100)
+export const thinParams: GlyphParams = {
+  ...regularParams,
+  weight: 20,
+  sidebearing: 65,
+  overshoot: 8,
+};
+
+// ExtraLight weight parameters (wght: 200)
+export const extraLightParams: GlyphParams = {
+  ...regularParams,
+  weight: 30,
   sidebearing: 60,
+  overshoot: 9,
+};
+
+// Medium weight parameters (wght: 500)
+export const mediumParams: GlyphParams = {
+  ...regularParams,
+  weight: 110,
+  sidebearing: 45,
+  overshoot: 11,
+};
+
+// SemiBold weight parameters (wght: 600)
+export const semiBoldParams: GlyphParams = {
+  ...regularParams,
+  weight: 130,
+  sidebearing: 42,
+  overshoot: 12,
+};
+
+// Black weight parameters (wght: 900)
+export const blackParams: GlyphParams = {
+  ...regularParams,
+  weight: 200,
+  sidebearing: 35,
+  overshoot: 15,
 };
 
 export function createFontConfig(
@@ -60,9 +100,14 @@ export function createFontConfig(
   };
 }
 
-// Preset configurations
+// Preset configurations - 8 weights
 export const presets = {
-  regular: () => createFontConfig('Haifa', 'Regular', regularParams),
-  bold: () => createFontConfig('Haifa', 'Bold', boldParams),
+  thin: () => createFontConfig('Haifa', 'Thin', thinParams),
+  extraLight: () => createFontConfig('Haifa', 'ExtraLight', extraLightParams),
   light: () => createFontConfig('Haifa', 'Light', lightParams),
+  regular: () => createFontConfig('Haifa', 'Regular', regularParams),
+  medium: () => createFontConfig('Haifa', 'Medium', mediumParams),
+  semiBold: () => createFontConfig('Haifa', 'SemiBold', semiBoldParams),
+  bold: () => createFontConfig('Haifa', 'Bold', boldParams),
+  black: () => createFontConfig('Haifa', 'Black', blackParams),
 };

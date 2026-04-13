@@ -4,7 +4,7 @@ import { createPath } from '../core/path-builder.js';
 // Complete lowercase latin alphabet
 // Geometric sans style: uniform stems, minimal modulation
 
-// a - Brockmann style: perfect circle bowl + straight stem
+// a - Brockmann: pure circle bowl + straight stem, minimal
 export const a: GlyphDefinition = {
   unicode: 0x0061,
   name: 'a',
@@ -16,44 +16,38 @@ export const a: GlyphDefinition = {
     const xHeight = p.xHeight;
     const overshoot = p.overshoot;
 
-    // Brockmann: perfect circle proportion
-    const bowlWidth = xHeight * 0.95;
-    const fullWidth = bowlWidth + stem * 0.8 + sb * 2;
-    const cx = sb + bowlWidth / 2;
+    // Brockmann: perfect circle, bowl = x-height
+    const bowlD = xHeight;
+    const r = bowlD / 2 - stem / 2;
+    const cx = sb + bowlD / 2;
     const cy = xHeight / 2;
-    const r = bowlWidth / 2 - stem / 2;
     const k = 0.5522847498;
 
-    // Perfect circle bowl (outer)
+    // Circle bowl (outer) - true circle, not oval
     const outerR = r + stem / 2 + overshoot;
-    builder
-      .moveTo(cx, cy - outerR)
-      .curveTo(cx + outerR * k, cy - outerR, cx + outerR, cy - outerR * k, cx + outerR, cy)
-      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx, cy + outerR)
-      .curveTo(cx - outerR * k, cy + outerR, cx - outerR, cy + outerR * k, cx - outerR, cy)
-      .curveTo(cx - outerR, cy - outerR * k, cx - outerR * k, cy - outerR, cx, cy - outerR)
-      .closePath();
+    builder.circle(cx, cy, outerR, overshoot);
 
-    // Counter (inner circle)
+    // Circle counter (inner)
     const innerR = r - stem / 2;
     builder
-      .moveTo(cx, cy - innerR)
-      .curveTo(cx - innerR * k, cy - innerR, cx - innerR, cy - innerR * k, cx - innerR, cy)
-      .curveTo(cx - innerR, cy + innerR * k, cx - innerR * k, cy + innerR, cx, cy + innerR)
-      .curveTo(cx + innerR * k, cy + innerR, cx + innerR, cy + innerR * k, cx + innerR, cy)
-      .curveTo(cx + innerR, cy - innerR * k, cx + innerR * k, cy - innerR, cx, cy - innerR)
+      .moveTo(cx + innerR, cy)
+      .curveTo(cx + innerR, cy + innerR * k, cx + innerR * k, cy + innerR, cx, cy + innerR)
+      .curveTo(cx - innerR * k, cy + innerR, cx - innerR, cy + innerR * k, cx - innerR, cy)
+      .curveTo(cx - innerR, cy - innerR * k, cx - innerR * k, cy - innerR, cx, cy - innerR)
+      .curveTo(cx + innerR * k, cy - innerR, cx + innerR, cy - innerR * k, cx + innerR, cy)
       .closePath();
 
-    // Right stem - straight, clean
-    const stemX = fullWidth - sb - stem / 2;
+    // Stem positioned at right edge of bowl
+    const fullWidth = sb + bowlD + stem * 0.5;
+    const stemX = fullWidth - stem / 2;
     builder.vStem(stemX, 0, xHeight, stem);
 
-    a.advanceWidth = fullWidth;
+    a.advanceWidth = fullWidth + sb;
     return builder.build();
   },
 };
 
-// b - Brockmann: straight ascender + perfect circle bowl
+// b - Brockmann: straight ascender + pure circle bowl
 export const b: GlyphDefinition = {
   unicode: 0x0062,
   name: 'b',
@@ -66,43 +60,36 @@ export const b: GlyphDefinition = {
     const ascender = p.ascender;
     const overshoot = p.overshoot;
 
-    // Brockmann proportions
-    const bowlWidth = xHeight * 0.95;
-    const fullWidth = sb + stem + bowlWidth + sb;
-    const cx = sb + stem + bowlWidth / 2;
+    // Bowl = x-height, true circle
+    const bowlD = xHeight;
+    const r = bowlD / 2 - stem / 2;
+    const cx = sb + stem + bowlD / 2;
     const cy = xHeight / 2;
-    const r = bowlWidth / 2 - stem / 2;
     const k = 0.5522847498;
 
-    // Left stem - straight to ascender
+    // Left stem - straight, full ascender
     builder.vStem(sb + stem / 2, 0, ascender, stem);
 
-    // Perfect circle bowl (outer)
+    // Circle bowl (outer)
     const outerR = r + stem / 2 + overshoot;
-    builder
-      .moveTo(cx, cy - outerR)
-      .curveTo(cx + outerR * k, cy - outerR, cx + outerR, cy - outerR * k, cx + outerR, cy)
-      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx, cy + outerR)
-      .curveTo(cx - outerR * k, cy + outerR, cx - outerR, cy + outerR * k, cx - outerR, cy)
-      .curveTo(cx - outerR, cy - outerR * k, cx - outerR * k, cy - outerR, cx, cy - outerR)
-      .closePath();
+    builder.circle(cx, cy, outerR, overshoot);
 
-    // Counter (inner circle)
+    // Circle counter (inner)
     const innerR = r - stem / 2;
     builder
-      .moveTo(cx, cy - innerR)
-      .curveTo(cx - innerR * k, cy - innerR, cx - innerR, cy - innerR * k, cx - innerR, cy)
-      .curveTo(cx - innerR, cy + innerR * k, cx - innerR * k, cy + innerR, cx, cy + innerR)
-      .curveTo(cx + innerR * k, cy + innerR, cx + innerR, cy + innerR * k, cx + innerR, cy)
-      .curveTo(cx + innerR, cy - innerR * k, cx + innerR * k, cy - innerR, cx, cy - innerR)
+      .moveTo(cx + innerR, cy)
+      .curveTo(cx + innerR, cy + innerR * k, cx + innerR * k, cy + innerR, cx, cy + innerR)
+      .curveTo(cx - innerR * k, cy + innerR, cx - innerR, cy + innerR * k, cx - innerR, cy)
+      .curveTo(cx - innerR, cy - innerR * k, cx - innerR * k, cy - innerR, cx, cy - innerR)
+      .curveTo(cx + innerR * k, cy - innerR, cx + innerR, cy - innerR * k, cx + innerR, cy)
       .closePath();
 
-    b.advanceWidth = fullWidth;
+    b.advanceWidth = sb + stem + bowlD + sb;
     return builder.build();
   },
 };
 
-// c - Brockmann: clean C-shape, no caps, simple curves
+// c - Brockmann: 3/4 circle, open on right, clean
 export const c: GlyphDefinition = {
   unicode: 0x0063,
   name: 'c',
@@ -114,37 +101,38 @@ export const c: GlyphDefinition = {
     const xHeight = p.xHeight;
     const overshoot = p.overshoot;
 
-    // Brockmann: perfect circle, open on right
-    const width = xHeight * 0.95;
-    const fullWidth = width + sb * 2;
-    const cx = fullWidth / 2;
+    // True circle, 3/4 arc
+    const bowlD = xHeight;
+    const r = bowlD / 2 - stem / 2;
+    const cx = sb + bowlD / 2;
     const cy = xHeight / 2;
-    const r = width / 2 - stem / 2;
     const k = 0.5522847498;
 
     const outerR = r + stem / 2 + overshoot;
     const innerR = r - stem / 2;
 
-    // C-shape: outer arc (left side only, no right side)
+    // Outer arc: from top, around left, to bottom-right opening
     builder
-      .moveTo(cx + outerR * 0.3, cy - outerR)
+      .moveTo(cx + outerR * 0.4, cy - outerR)
       .curveTo(cx + outerR * k, cy - outerR, cx + outerR, cy - outerR * k, cx + outerR, cy)
-      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx + outerR * 0.3, cy + outerR);
+      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx + outerR * 0.4, cy + outerR);
 
-    // Inner arc connecting back
-    builder.lineTo(cx + innerR * 0.3, cy + innerR);
+    // Straight cut across to inner
+    builder.lineTo(cx + innerR * 0.4, cy + innerR);
+
+    // Inner arc back up
     builder
       .curveTo(cx + innerR * k, cy + innerR, cx + innerR, cy + innerR * k, cx + innerR, cy)
-      .curveTo(cx + innerR, cy - innerR * k, cx + innerR * k, cy - innerR, cx + innerR * 0.3, cy - innerR);
+      .curveTo(cx + innerR, cy - innerR * k, cx + innerR * k, cy - innerR, cx + innerR * 0.4, cy - innerR);
 
     builder.closePath();
 
-    c.advanceWidth = fullWidth;
+    c.advanceWidth = sb + bowlD + sb * 0.5;
     return builder.build();
   },
 };
 
-// d - Brockmann: bowl + right ascender
+// d - Brockmann: pure circle bowl + right ascender
 export const d: GlyphDefinition = {
   unicode: 0x0064,
   name: 'd',
@@ -157,42 +145,38 @@ export const d: GlyphDefinition = {
     const ascender = p.ascender;
     const overshoot = p.overshoot;
 
-    const bowlWidth = xHeight * 0.95;
-    const fullWidth = sb + bowlWidth + stem + sb;
-    const cx = sb + bowlWidth / 2;
+    // Bowl = x-height, true circle
+    const bowlD = xHeight;
+    const r = bowlD / 2 - stem / 2;
+    const cx = sb + bowlD / 2;
     const cy = xHeight / 2;
-    const r = bowlWidth / 2 - stem / 2;
     const k = 0.5522847498;
 
-    // Right ascender
-    builder.vStem(fullWidth - sb - stem / 2, 0, ascender, stem);
+    // Right stem - straight to ascender
+    const fullWidth = sb + bowlD + stem * 0.5;
+    const stemX = fullWidth - stem / 2;
+    builder.vStem(stemX, 0, ascender, stem);
 
-    // Perfect circle bowl (outer)
+    // Circle bowl (outer)
     const outerR = r + stem / 2 + overshoot;
-    builder
-      .moveTo(cx, cy - outerR)
-      .curveTo(cx + outerR * k, cy - outerR, cx + outerR, cy - outerR * k, cx + outerR, cy)
-      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx, cy + outerR)
-      .curveTo(cx - outerR * k, cy + outerR, cx - outerR, cy + outerR * k, cx - outerR, cy)
-      .curveTo(cx - outerR, cy - outerR * k, cx - outerR * k, cy - outerR, cx, cy - outerR)
-      .closePath();
+    builder.circle(cx, cy, outerR, overshoot);
 
-    // Counter (inner circle)
+    // Circle counter (inner)
     const innerR = r - stem / 2;
     builder
-      .moveTo(cx, cy - innerR)
-      .curveTo(cx - innerR * k, cy - innerR, cx - innerR, cy - innerR * k, cx - innerR, cy)
-      .curveTo(cx - innerR, cy + innerR * k, cx - innerR * k, cy + innerR, cx, cy + innerR)
-      .curveTo(cx + innerR * k, cy + innerR, cx + innerR, cy + innerR * k, cx + innerR, cy)
-      .curveTo(cx + innerR, cy - innerR * k, cx + innerR * k, cy - innerR, cx, cy - innerR)
+      .moveTo(cx + innerR, cy)
+      .curveTo(cx + innerR, cy + innerR * k, cx + innerR * k, cy + innerR, cx, cy + innerR)
+      .curveTo(cx - innerR * k, cy + innerR, cx - innerR, cy + innerR * k, cx - innerR, cy)
+      .curveTo(cx - innerR, cy - innerR * k, cx - innerR * k, cy - innerR, cx, cy - innerR)
+      .curveTo(cx + innerR * k, cy - innerR, cx + innerR, cy - innerR * k, cx + innerR, cy)
       .closePath();
 
-    d.advanceWidth = fullWidth;
+    d.advanceWidth = fullWidth + sb;
     return builder.build();
   },
 };
 
-// e - Brockmann: circle with horizontal crossbar opening
+// e - Brockmann: circle with horizontal opening (eye shape)
 export const e: GlyphDefinition = {
   unicode: 0x0065,
   name: 'e',
@@ -204,45 +188,36 @@ export const e: GlyphDefinition = {
     const xHeight = p.xHeight;
     const overshoot = p.overshoot;
 
-    const width = xHeight * 0.95;
-    const fullWidth = width + sb * 2;
-    const cx = fullWidth / 2;
+    // True circle with eye opening
+    const bowlD = xHeight;
+    const r = bowlD / 2 - stem / 2;
+    const cx = sb + bowlD / 2;
     const cy = xHeight / 2;
-    const r = width / 2 - stem / 2;
     const k = 0.5522847498;
 
     const outerR = r + stem / 2 + overshoot;
     const innerR = r - stem / 2;
-    const barY = cy + stem * 0.3; // Slightly below center
 
-    // Outer: left arc + bottom arc (no top right)
+    // Outer circle (left and bottom arcs)
     builder
-      .moveTo(cx - outerR * 0.1, cy - outerR) // Start near top
+      .moveTo(cx + outerR * 0.3, cy - outerR)
       .curveTo(cx + outerR * k, cy - outerR, cx + outerR, cy - outerR * k, cx + outerR, cy)
-      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * 0.3, cy + outerR, cx + outerR * 0.2, cy + outerR);
+      .curveTo(cx + outerR, cy + outerR * k, cx + outerR * k, cy + outerR, cx + outerR * 0.3, cy + outerR);
 
-    // Bottom straight across
-    builder.lineTo(cx + innerR * 0.2, barY);
+    // Horizontal cut
+    builder.lineTo(cx + innerR * 0.3, cy + innerR);
 
-    // Inner: up and around
+    // Inner circle back
     builder
-      .curveTo(cx + innerR, barY, cx + innerR, cy - innerR * k, cx + innerR * 0.5, cy - innerR)
+      .curveTo(cx + innerR, cy + innerR * k, cx + innerR, cy - innerR * k, cx + innerR * 0.5, cy - innerR)
       .curveTo(cx - innerR * k, cy - innerR, cx - innerR, cy - innerR * k, cx - innerR, cy)
       .curveTo(cx - innerR, cy + innerR * k, cx - innerR * k, cy + innerR, cx - innerR * 0.2, cy + innerR);
 
-    // Connect back up
-    builder.lineTo(cx - outerR * 0.1, cy + outerR - stem);
-
-    // Close up left side
-    builder.lineTo(cx - outerR * 0.1, cy - outerR);
+    // Close at crossbar height
+    builder.lineTo(cx - outerR * 0.2, cy + outerR - stem * 1.5);
     builder.closePath();
 
-    // Crossbar
-    const barLeft = cx - outerR * 0.8;
-    const barRight = cx + outerR * 0.9;
-    builder.hStem(barLeft, barY - stem / 2, barRight - barLeft, stem);
-
-    e.advanceWidth = fullWidth;
+    e.advanceWidth = sb + bowlD + sb * 0.3;
     return builder.build();
   },
 };
