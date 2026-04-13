@@ -1,5 +1,8 @@
 import { GlyphDefinition, GlyphParams } from '../types.js';
 import { createPath } from '../core/path-builder.js';
+import { ComponentSystem } from '../core/component-system.js';
+import { BROCKMANN_PROFILE, OPTICAL_CORRECTIONS } from '../config/brockmann-profile.js';
+import opentype from 'opentype.js';
 
 // Complete lowercase latin alphabet
 // Geometric sans style: uniform stems, minimal modulation
@@ -1011,3 +1014,55 @@ export const lowercaseFull: GlyphDefinition[] = [
   a, b, c, d, e, f, g, h, i, j, k, l, m,
   p, q, r, s, t, u, v, w, x, y, z
 ];
+
+// ==================== COMPONENT-BASED VARIANTS ====================
+// Modern industrial-grade construction using ComponentSystem
+
+// Component-based 'a' using superellipse bowl + vertical stem
+export const aComponent: GlyphDefinition = {
+  unicode: 0x0061,
+  name: 'a',
+  advanceWidth: 0,
+  build: (params: GlyphParams) => {
+    const components = new ComponentSystem(BROCKMANN_PROFILE);
+    const path = new opentype.Path();
+    
+    // Apply optical corrections
+    const correction = OPTICAL_CORRECTIONS['a'] || { widthFactor: 1.0, overshoot: 1.0 };
+    
+    // Bowl (open on right side)
+    const bowl = components.generateBowl({
+      centerX: params.sidebearing + params.xHeight * 0.35,
+      centerY: params.xHeight * 0.45,
+      width: params.xHeight * 0.65 * (correction.widthFactor || 1.0),
+      height: params.xHeight * 0.9 * (correction.overshoot || 1.0),
+      aperture: 0.75,
+      openRight: true
+    });
+    
+    // Vertical stem (right side)
+    const stem = components.verticalStem({
+      x: params.sidebearing + params.xHeight * 0.75 - params.weight,
+      yStart: 0,
+      yEnd: params.xHeight,
+      width: params.weight,
+      roundTop: true,
+      roundBottom: false
+    });
+    
+    // Combine paths (manual merge since opentype.Path.extend doesn't exist)
+    // Copy bowl commands
+    const bowlCmd = (bowl as any).commands || [];
+    const stemCmd = (stem as any).commands || [];
+    
+    for (const cmd of bowlCmd) {
+      (path as any).commands.push(cmd);
+    }
+    for (const cmd of stemCmd) {
+      (path as any).commands.push(cmd);
+    }
+    
+    aComponent.advanceWidth = params.sidebearing * 2 + params.xHeight * 0.95;
+    return path;
+  }
+};

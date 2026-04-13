@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brockmann Font Audit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+    
+    .subtitle {
+      color: #666;
+      margin-bottom: 32px;
+    }
+    
+    @font-face {
+      font-family: 'Brockmann';
+      src: url('output/Brockmann-Regular.otf') format('opentype');
+      font-weight: 400;
+    }
+    
+    @font-face {
+      font-family: 'Brockmann';
+      src: url('output/Brockmann-Italic.otf') format('opentype');
+      font-weight: 400;
+      font-style: italic;
+    }
+    
+    .section {
+      background: white;
+      padding: 32px;
+      margin-bottom: 24px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .section h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .glyph-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .glyph-cell {
+      text-align: center;
+      padding: 16px 8px;
+      background: #fafafa;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+    
+    .glyph-cell .char {
+      font-family: 'Brockmann', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+    
+    .glyph-cell .unicode {
+      font-size: 10px;
+      color: #999;
+      font-family: monospace;
+    }
+    
+    .test-string {
+      font-family: 'Brockmann', sans-serif;
+      margin: 16px 0;
+      color: #1a1a1a;
+    }
+    
+    .size-xs { font-size: 12px; }
+    .size-sm { font-size: 16px; }
+    .size-md { font-size: 24px; }
+    .size-lg { font-size: 48px; }
+    .size-xl { font-size: 96px; }
+    
+    .italic .test-string {
+      font-style: italic;
+    }
+    
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 16px;
+    }
+    
+    .checklist {
+      list-style: none;
+    }
+    
+    .checklist li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .checklist li::before {
+      content: "○";
+      color: #ccc;
+    }
+    
+    .checklist li.checked::before {
+      content: "●";
+      color: #22c55e;
+    }
+    
+    .checklist li.issue::before {
+      content: "●";
+      color: #ef4444;
+    }
+    
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    
+    .metrics-table th,
+    .metrics-table td {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .metrics-table th {
+      color: #666;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+    }
+    
+    .kern-pairs {
+      font-family: 'Brockmann', sans-serif;
+      font-size: 48px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-top: 16px;
+    }
+    
+    .kern-pair {
+      background: #fafafa;
+      padding: 16px 24px;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+    
+    .kern-pair label {
+      display: block;
+      font-size: 10px;
+      color: #999;
+      font-family: system-ui;
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Brockmann Font Audit</h1>
+    <p class="subtitle">Swiss Geometric Grotesk — Visual Inspection</p>
+    
+    <!-- Character Set -->
+    <div class="section">
+      <h2>Uppercase A-Z</h2>
+      <div class="glyph-grid">
+        <div class="glyph-cell"><div class="char">A</div><div class="unicode">U+0041</div></div>
+        <div class="glyph-cell"><div class="char">B</div><div class="unicode">U+0042</div></div>
+        <div class="glyph-cell"><div class="char">C</div><div class="unicode">U+0043</div></div>
+        <div class="glyph-cell"><div class="char">D</div><div class="unicode">U+0044</div></div>
+        <div class="glyph-cell"><div class="char">E</div><div class="unicode">U+0045</div></div>
+        <div class="glyph-cell"><div class="char">F</div><div class="unicode">U+0046</div></div>
+        <div class="glyph-cell"><div class="char">G</div><div class="unicode">U+0047</div></div>
+        <div class="glyph-cell"><div class="char">H</div><div class="unicode">U+0048</div></div>
+        <div class="glyph-cell"><div class="char">I</div><div class="unicode">U+0049</div></div>
+        <div class="glyph-cell"><div class="char">J</div><div class="unicode">U+004A</div></div>
+        <div class="glyph-cell"><div class="char">K</div><div class="unicode">U+004B</div></div>
+        <div class="glyph-cell"><div class="char">L</div><div class="unicode">U+004C</div></div>
+        <div class="glyph-cell"><div class="char">M</div><div class="unicode">U+004D</div></div>
+        <div class="glyph-cell"><div class="char">N</div><div class="unicode">U+004E</div></div>
+        <div class="glyph-cell"><div class="char">O</div><div class="unicode">U+004F</div></div>
+        <div class="glyph-cell"><div class="char">P</div><div class="unicode">U+0050</div></div>
+        <div class="glyph-cell"><div class="char">Q</div><div class="unicode">U+0051</div></div>
+        <div class="glyph-cell"><div class="char">R</div><div class="unicode">U+0052</div></div>
+        <div class="glyph-cell"><div class="char">S</div><div class="unicode">U+0053</div></div>
+        <div class="glyph-cell"><div class="char">T</div><div class="unicode">U+0054</div></div>
+        <div class="glyph-cell"><div class="char">U</div><div class="unicode">U+0055</div></div>
+        <div class="glyph-cell"><div class="char">V</div><div class="unicode">U+0056</div></div>
+        <div class="glyph-cell"><div class="char">W</div><div class="unicode">U+0057</div></div>
+        <div class="glyph-cell"><div class="char">X</div><div class="unicode">U+0058</div></div>
+        <div class="glyph-cell"><div class="char">Y</div><div class="unicode">U+0059</div></div>
+        <div class="glyph-cell"><div class="char">Z</div><div class="unicode">U+005A</div></div>
+      </div>
+      
+      <h2>Lowercase a-z</h2>
+      <div class="glyph-grid">
+        <div class="glyph-cell"><div class="char">a</div><div class="unicode">U+0061</div></div>
+        <div class="glyph-cell"><div class="char">b</div><div class="unicode">U+0062</div></div>
+        <div class="glyph-cell"><div class="char">c</div><div class="unicode">U+0063</div></div>
+        <div class="glyph-cell"><div class="char">d</div><div class="unicode">U+0064</div></div>
+        <div class="glyph-cell"><div class="char">e</div><div class="unicode">U+0065</div></div>
+        <div class="glyph-cell"><div class="char">f</div><div class="unicode">U+0066</div></div>
+        <div class="glyph-cell"><div class="char">g</div><div class="unicode">U+0067</div></div>
+        <div class="glyph-cell"><div class="char">h</div><div class="unicode">U+0068</div></div>
+        <div class="glyph-cell"><div class="char">i</div><div class="unicode">U+0069</div></div>
+        <div class="glyph-cell"><div class="char">j</div><div class="unicode">U+006A</div></div>
+        <div class="glyph-cell"><div class="char">k</div><div class="unicode">U+006B</div></div>
+        <div class="glyph-cell"><div class="char">l</div><div class="unicode">U+006C</div></div>
+        <div class="glyph-cell"><div class="char">m</div><div class="unicode">U+006D</div></div>
+        <div class="glyph-cell"><div class="char">n</div><div class="unicode">U+006E</div></div>
+        <div class="glyph-cell"><div class="char">o</div><div class="unicode">U+006F</div></div>
+        <div class="glyph-cell"><div class="char">p</div><div class="unicode">U+0070</div></div>
+        <div class="glyph-cell"><div class="char">q</div><div class="unicode">U+0071</div></div>
+        <div class="glyph-cell"><div class="char">r</div><div class="unicode">U+0072</div></div>
+        <div class="glyph-cell"><div class="char">s</div><div class="unicode">U+0073</div></div>
+        <div class="glyph-cell"><div class="char">t</div><div class="unicode">U+0074</div></div>
+        <div class="glyph-cell"><div class="char">u</div><div class="unicode">U+0075</div></div>
+        <div class="glyph-cell"><div class="char">v</div><div class="unicode">U+0076</div></div>
+        <div class="glyph-cell"><div class="char">w</div><div class="unicode">U+0077</div></div>
+        <div class="glyph-cell"><div class="char">x</div><div class="unicode">U+0078</div></div>
+        <div class="glyph-cell"><div class="char">y</div><div class="unicode">U+0079</div></div>
+        <div class="glyph-cell"><div class="char">z</div><div class="unicode">U+007A</div></div>
+      </div>
+    </div>
+    
+    <!-- Size Testing -->
+    <div class="section">
+      <h2>Size Testing (HAMBURGEFONStiv)</h2>
+      <div class="test-string size-xl">HAMBURGEFONStiv</div>
+      <div class="test-string size-lg">HAMBURGEFONStiv</div>
+      <div class="test-string size-md">HAMBURGEFONStiv</div>
+      <div class="test-string size-sm">HAMBURGEFONStiv</div>
+      <div class="test-string size-xs">HAMBURGEFONStiv</div>
+    </div>
+    
+    <!-- Italic -->
+    <div class="section italic">
+      <h2>Italic (True Italic)</h2>
+      <div class="test-string size-lg">HAMBURGEFONStiv</div>
+      <div class="test-string size-md">abcdefghijklmnopqrstuvwxyz</div>
+      <div class="test-string size-md">ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+    </div>
+    
+    <!-- Kerning Pairs -->
+    <div class="section">
+      <h2>Critical Kerning Pairs</h2>
+      <div class="kern-pairs">
+        <div class="kern-pair">AV<label>AV</label></div>
+        <div class="kern-pair">AW<label>AW</label></div>
+        <div class="kern-pair">AY<label>AY</label></div>
+        <div class="kern-pair">TA<label>TA</label></div>
+        <div class="kern-pair">Te<label>Te</label></div>
+        <div class="kern-pair">To<label>To</label></div>
+        <div class="kern-pair">Tr<label>Tr</label></div>
+        <div class="kern-pair">Ly<label>Ly</label></div>
+        <div class="kern-pair">Lo<label>Lo</label></div>
+        <div class="kern-pair">We<label>We</label></div>
+        <div class="kern-pair">Yo<label>Yo</label></div>
+        <div class="kern-pair">ra<label>ra</label></div>
+      </div>
+    </div>
+    
+    <!-- Text Samples -->
+    <div class="section">
+      <h2>Text Samples</h2>
+      <div class="test-string size-md" style="margin-bottom: 16px;">
+        The quick brown fox jumps over the lazy dog.
+      </div>
+      <div class="test-string size-sm" style="color: #666;">
+        1234567890 — € $ £ ¥ © ® ™ @ # & %
+      </div>
+    </div>
+    
+    <!-- Brockmann Checklist -->
+    <div class="section">
+      <h2>Brockmann Style Checklist</h2>
+      <ul class="checklist">
+        <li>O, C, G — perfect circles (squarish feel)</li>
+        <li>H, N, U — stems at consistent width</li>
+        <li>M — apex at optical center</li>
+        <li>K, R — legs meet at consistent angle</li>
+        <li>S — symmetric curves, horizontal terminals</li>
+        <li>a, e, s — open apertures</li>
+        <li>x-height ~72-74% of cap height</li>
+        <li>Monolinear stroke (no contrast)</li>
+        <li>Vertical stress (no slant in roman)</li>
+        <li>Minimal rounding (function over decoration)</li>
+      </ul>
+    </div>
+    
+    <!-- Metrics -->
+    <div class="section">
+      <h2>Font Metrics</h2>
+      <table class="metrics-table">
+        <tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+        <tr><td>Units Per Em</td><td>1000</td><td>Standard</td></tr>
+        <tr><td>Ascender</td><td>750</td><td></td></tr>
+        <tr><td>Descender</td><td>-200</td><td></td></tr>
+        <tr><td>x-Height</td><td>520</td><td>74% of cap height</td></tr>
+        <tr><td>Cap Height</td><td>700</td><td></td></tr>
+        <tr><td>Stem Width (Regular)</td><td>85</td><td></td></tr>
+        <tr><td>Sidebearing</td><td>45</td><td>Tight spacing</td></tr>
+        <tr><td>Overshoot</td><td>12</td><td>Optical correction</td></tr>
+      </table>
+    </div>
+    
+    <!-- Known Issues -->
+    <div class="section">
+      <h2>Issues to Review</h2>
+      <ul class="checklist">
+        <li class="issue">S — check curve balance and terminal alignment</li>
+        <li class="issue">C, G — verify aperture openness vs. consistency</li>
+        <li class="issue">M — confirm apex position and width</li>
+        <li class="issue">K — check leg angles and junction point</li>
+        <li class="issue">R — verify leg position and curve</li>
+        <li class="issue">k — ensure leg angles match K proportions</li>
+        <li class="issue">s — mirror of S, check balance</li>
+        <li>Spacing consistency across rounds (O, C, G, D, Q)</li>
+        <li>Italic slant angle (should be ~9-11°)</li>
+      </ul>
+    </div>
+    
+    <!-- Next Steps -->
+    <div class="section">
+      <h2>Next Steps</h2>
+      <ul class="checklist">
+        <li>Open audit.html in browser with generated fonts</li>
+        <li>Compare with Brockmann references (Musica Viva posters)</li>
+        <li>Mark checklist items as checked/issue</li>
+        <li>Prioritize fixes based on visual impact</li>
+        <li>Regenerate and re-audit</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

@@ -4,7 +4,7 @@
 import { GlyphDefinition, GlyphParams } from '../types.js';
 import { createPath } from '../core/path-builder.js';
 
-// H — Geometric sans, crossbar at optical center
+// H — Clean geometric with consistent stroke
 export const H: GlyphDefinition = {
   unicode: 0x0048,
   name: 'H',
@@ -14,25 +14,31 @@ export const H: GlyphDefinition = {
     const sb = p.sidebearing;
     const stem = p.weight;
     const capHeight = p.capHeight;
-    const round = p.terminalRound || 4;
 
     const innerSpace = stem * 2.8;
     const width = sb * 2 + stem * 2 + innerSpace;
 
-    // Left stem with subtle terminal rounding
-    builder.vStem(sb + stem / 2, round, capHeight - round * 2, stem);
-    // Top/bottom serifs (rounded caps)
-    builder.hStem(sb + stem / 2, round, stem, stem);
-    builder.hStem(sb + stem / 2, capHeight - stem - round, stem, stem);
+    // Left stem (simple rectangle)
+    builder.moveTo(sb, 0);
+    builder.lineTo(sb + stem, 0);
+    builder.lineTo(sb + stem, capHeight);
+    builder.lineTo(sb, capHeight);
+    builder.closePath();
 
-    // Right stem
-    builder.vStem(width - sb - stem / 2, round, capHeight - round * 2, stem);
-    builder.hStem(width - sb - stem * 1.5, round, stem, stem);
-    builder.hStem(width - sb - stem * 1.5, capHeight - stem - round, stem, stem);
+    // Right stem (simple rectangle)
+    builder.moveTo(width - sb - stem, 0);
+    builder.lineTo(width - sb, 0);
+    builder.lineTo(width - sb, capHeight);
+    builder.lineTo(width - sb - stem, capHeight);
+    builder.closePath();
 
-    // Crossbar at optical center (slightly above geometric center)
+    // Crossbar at optical center
     const crossbarY = capHeight * 0.52;
-    builder.hStem(sb + stem / 2, crossbarY, width - sb * 2 - stem, stem);
+    builder.moveTo(sb + stem, crossbarY);
+    builder.lineTo(width - sb - stem, crossbarY);
+    builder.lineTo(width - sb - stem, crossbarY + stem);
+    builder.lineTo(sb + stem, crossbarY + stem);
+    builder.closePath();
 
     H.advanceWidth = width;
     return builder.build();
@@ -303,7 +309,7 @@ export const B: GlyphDefinition = {
   },
 };
 
-// D — Left stem, right bowl
+// D — Left stem, right bowl (closed stroke)
 export const D: GlyphDefinition = {
   unicode: 0x0044,
   name: 'D',
@@ -314,9 +320,8 @@ export const D: GlyphDefinition = {
     const stem = p.weight;
     const capHeight = p.capHeight;
     const overshoot = p.overshoot;
-    const round = p.terminalRound || 4;
 
-    const bowlW = capHeight * 0.9;
+    const bowlW = capHeight * 0.88;
     const fullWidth = bowlW + sb * 2;
     const cx = fullWidth / 2;
     const cy = capHeight / 2;
@@ -325,26 +330,25 @@ export const D: GlyphDefinition = {
     const k = 0.5522847498;
     const flatten = 0.85;
 
-    // Left stem
-    builder.vStem(sb + stem / 2, round, capHeight - round * 2, stem);
-    builder.hStem(sb + stem / 2, round, stem, stem);
-    builder.hStem(sb + stem / 2, capHeight - stem - round, stem, stem);
+    // Left stem as rectangle
+    builder.moveTo(sb, 0);
+    builder.lineTo(sb + stem, 0);
+    builder.lineTo(sb + stem, capHeight);
+    builder.lineTo(sb, capHeight);
+    builder.closePath();
 
-    // Right bowl (open on left)
-    builder
-      .moveTo(cx + rx * flatten, cy - ry)
-      .curveTo(cx + rx, cy - ry * k, cx + rx, cy + ry * k, cx + rx * flatten, cy + ry)
-      .curveTo(cx + rx * k, cy + ry, cx, cy + ry, cx - rx * flatten * 0.5, cy + ry)
-      .lineTo(sb + stem * 1.5, cy + ry * 0.8);
+    // Right bowl outer (squarish, open on left)
+    builder.moveTo(sb + stem, cy - ry);
+    builder.curveTo(cx + rx, cy - ry * k, cx + rx, cy + ry * k, cx + rx * flatten, cy + ry);
+    builder.curveTo(cx, cy + ry, sb + stem + rx * 0.3, cy + ry, sb + stem, cy + ry * 0.6);
 
-    // Inner counter
+    // Right bowl inner
     const innerRx = rx - stem;
     const innerRy = ry - stem;
-    builder.lineTo(sb + stem * 1.5, cy - innerRy * 0.8);
-    builder.lineTo(cx - innerRx * flatten * 0.5, cy - innerRy);
-    builder
-      .curveTo(cx + innerRx * k, cy - innerRy, cx + innerRx, cy - innerRy * k, cx + innerRx * flatten, cy - innerRy)
-      .curveTo(cx + innerRx, cy, cx + innerRx, cy, cx + innerRx * flatten, cy);
+    builder.lineTo(sb + stem, cy + innerRy * 0.6);
+    builder.curveTo(sb + stem + innerRx * 0.3, cy + innerRy, cx, cy + innerRy, cx + innerRx * flatten, cy + innerRy);
+    builder.curveTo(cx + innerRx, cy + innerRy * k, cx + innerRx, cy - innerRy * k, cx + innerRx * flatten, cy - innerRy);
+    builder.lineTo(sb + stem, cy - innerRy);
     builder.closePath();
 
     D.advanceWidth = fullWidth;
@@ -435,7 +439,7 @@ export const I: GlyphDefinition = {
   },
 };
 
-// J — Hook shape
+// J — Hook shape with closed contour
 export const J: GlyphDefinition = {
   unicode: 0x004a,
   name: 'J',
@@ -446,26 +450,28 @@ export const J: GlyphDefinition = {
     const stem = p.weight;
     const capHeight = p.capHeight;
     const descender = p.descender;
-    const round = p.terminalRound || 4;
 
-    const width = capHeight * 0.5 + sb * 2;
-    const stemX = width - sb - stem / 2;
-
-    // Vertical stem with descender hook
-    builder.vStem(stemX, descender * 0.3, capHeight - round * 2, stem);
-    builder.hStem(stemX - stem / 2, capHeight - stem - round, stem, stem);
-
-    // Bottom hook curve
-    const hookDepth = Math.abs(descender) * 0.7;
-    const cx = stemX - hookDepth / 2;
-    const cy = descender * 0.3;
-    const r = hookDepth / 2;
+    const width = capHeight * 0.55 + sb * 2;
+    const stemX = width - sb - stem;
+    const hookY = descender * 0.6;
     const k = 0.5522847498;
 
-    builder
-      .moveTo(stemX - stem / 2, cy)
-      .curveTo(stemX - stem / 2 - r * k, cy, stemX - stem / 2 - r, cy + r * k, stemX - stem / 2 - r, cy + r)
-      .lineTo(stemX - stem / 2 - r, cy + hookDepth);
+    // Vertical stem (top to bottom hook)
+    builder.moveTo(stemX, capHeight);
+    builder.lineTo(stemX + stem, capHeight);
+    builder.lineTo(stemX + stem, hookY + stem * 2);
+
+    // Hook curve outer
+    const hookR = stem * 2.5;
+    builder.curveTo(stemX + stem, hookY + hookR * k, stemX + stem - hookR * k, hookY + hookR, stemX + stem - hookR, hookY + hookR);
+    builder.lineTo(stemX + stem - hookR, hookY);
+
+    // Hook inner
+    const innerR = hookR - stem;
+    builder.lineTo(stemX + stem - hookR + stem, hookY);
+    builder.curveTo(stemX + stem - hookR + stem + innerR * k, hookY, stemX + stem, hookY + innerR * k, stemX + stem, hookY + stem * 2 - stem);
+    builder.lineTo(stemX, hookY + stem);
+    builder.closePath();
 
     J.advanceWidth = width;
     return builder.build();
@@ -563,22 +569,22 @@ export const M: GlyphDefinition = {
     builder.hStem(width - sb - stem * 1.5, round, stem, stem);
     builder.hStem(width - sb - stem * 1.5, capHeight - stem - round, stem, stem);
 
-    // Inner V shape
+    // Inner V shape — apex at optical center (50%)
     const midX = width / 2;
-    const midY = capHeight * 0.3;
+    const midY = capHeight * 0.45; // Optical center for balance
     const innerLeftX = sb + stem * 3;
     const innerRightX = width - sb - stem * 3;
 
-    builder.moveTo(innerLeftX - stem / 2, capHeight);
+    builder.moveTo(innerLeftX - stem / 2, capHeight - round);
     builder.lineTo(midX - stem / 2, midY);
     builder.lineTo(midX + stem / 2, midY);
-    builder.lineTo(innerLeftX + stem / 2, capHeight);
+    builder.lineTo(innerLeftX + stem / 2, capHeight - round);
     builder.closePath();
 
-    builder.moveTo(innerRightX + stem / 2, capHeight);
+    builder.moveTo(innerRightX + stem / 2, capHeight - round);
     builder.lineTo(midX + stem / 2, midY);
     builder.lineTo(midX - stem / 2, midY);
-    builder.lineTo(innerRightX - stem / 2, capHeight);
+    builder.lineTo(innerRightX - stem / 2, capHeight - round);
     builder.closePath();
 
     M.advanceWidth = width;
@@ -661,7 +667,7 @@ export const P: GlyphDefinition = {
   },
 };
 
-// Q — O with tail
+// Q — O with tail (closed contour)
 export const Q: GlyphDefinition = {
   unicode: 0x0051,
   name: 'Q',
@@ -674,7 +680,7 @@ export const Q: GlyphDefinition = {
     const descender = p.descender;
     const overshoot = p.overshoot;
 
-    // Start with O shape
+    // Same as O proportions
     const bowlW = capHeight * 0.92;
     const fullWidth = bowlW + sb * 2;
     const cx = fullWidth / 2;
@@ -693,7 +699,7 @@ export const Q: GlyphDefinition = {
       .curveTo(cx - rx * k, cy - ry, cx + rx * 0.3, cy - ry, cx + rx * flatten, cy - ry)
       .closePath();
 
-    // O inner
+    // O inner (counter)
     const innerRx = rx - stem;
     const innerRy = ry - stem;
     builder
@@ -704,13 +710,17 @@ export const Q: GlyphDefinition = {
       .curveTo(cx - innerRx * k, cy - innerRy, cx + innerRx * 0.3, cy - innerRy, cx + innerRx * flatten, cy - innerRy)
       .closePath();
 
-    // Tail
-    const tailStartX = cx + rx * 0.5;
-    const tailStartY = cy + ry * 0.5;
+    // Tail (slanted line descending from bottom right)
+    const tailStartX = cx + rx * 0.6;
+    const tailStartY = cy + ry * 0.4;
+    const tailEndX = tailStartX + stem;
+    const tailEndY = tailStartY + Math.abs(descender) * 0.6;
+
     builder.moveTo(tailStartX, tailStartY);
-    builder.lineTo(tailStartX + stem * 2, tailStartY + Math.abs(descender) * 0.5);
-    builder.lineTo(tailStartX + stem * 2 + stem, tailStartY + Math.abs(descender) * 0.5 - stem);
-    builder.lineTo(tailStartX + stem, tailStartY);
+    builder.lineTo(tailStartX + stem * 0.8, tailStartY - stem * 0.3);
+    builder.lineTo(tailEndX + stem * 0.5, tailEndY);
+    builder.lineTo(tailEndX - stem * 0.3, tailEndY + stem);
+    builder.lineTo(tailStartX - stem * 0.3, tailStartY + stem * 0.5);
     builder.closePath();
 
     Q.advanceWidth = fullWidth;
@@ -718,7 +728,7 @@ export const Q: GlyphDefinition = {
   },
 };
 
-// R — P with leg
+// R — P with leg (closed contours)
 export const R: GlyphDefinition = {
   unicode: 0x0052,
   name: 'R',
@@ -728,21 +738,22 @@ export const R: GlyphDefinition = {
     const sb = p.sidebearing;
     const stem = p.weight;
     const capHeight = p.capHeight;
-    const round = p.terminalRound || 4;
 
-    const bowlW = capHeight * 0.75;
+    const bowlW = capHeight * 0.72;
     const fullWidth = bowlW + sb * 2;
 
-    // Left stem
-    builder.vStem(sb + stem / 2, round, capHeight - round * 2, stem);
-    builder.hStem(sb + stem / 2, round, stem, stem);
-    builder.hStem(sb + stem / 2, capHeight - stem - round, stem, stem);
+    // Left stem (full height)
+    builder.moveTo(sb, 0);
+    builder.lineTo(sb + stem, 0);
+    builder.lineTo(sb + stem, capHeight);
+    builder.lineTo(sb, capHeight);
+    builder.closePath();
 
-    // Upper bowl
+    // Upper bowl outer
     const bowlRx = (fullWidth - sb * 2 - stem * 2) / 2;
-    const bowlRy = (capHeight * 0.6) / 2;
+    const bowlRy = (capHeight * 0.58) / 2;
     const cx = sb + stem + bowlRx;
-    const cy = capHeight * 0.7;
+    const cy = capHeight * 0.68;
     const k = 0.5522847498;
 
     builder
@@ -752,13 +763,27 @@ export const R: GlyphDefinition = {
     builder.lineTo(sb + stem, cy + bowlRy);
     builder.closePath();
 
-    // Leg
-    const legStartX = sb + stem + bowlRx * 0.8;
-    const legStartY = cy;
+    // Upper bowl inner (counter)
+    const innerRx = bowlRx - stem;
+    const innerRy = bowlRy - stem;
+    builder
+      .moveTo(sb + stem * 2, cy - innerRy)
+      .lineTo(cx + innerRx * 0.3, cy - innerRy)
+      .curveTo(cx + innerRx, cy - innerRy * k, cx + innerRx, cy + innerRy * k, cx + innerRx * 0.3, cy + innerRy);
+    builder.lineTo(sb + stem * 2, cy + innerRy);
+    builder.closePath();
+
+    // Leg (diagonal from bowl to baseline)
+    const legStartX = sb + stem + bowlRx * 0.75;
+    const legStartY = cy + bowlRy * 0.3;
+    const legEndX = fullWidth - sb - stem;
+    const legEndY = stem;
+
     builder.moveTo(legStartX, legStartY);
-    builder.lineTo(fullWidth - sb - stem, round);
-    builder.lineTo(fullWidth - sb, round);
-    builder.lineTo(legStartX + stem, legStartY);
+    builder.lineTo(legStartX + stem * 0.7, legStartY - stem * 0.3);
+    builder.lineTo(legEndX + stem, legEndY);
+    builder.lineTo(legEndX, legEndY + stem);
+    builder.lineTo(legStartX - stem * 0.3, legStartY + stem);
     builder.closePath();
 
     R.advanceWidth = fullWidth;
@@ -766,7 +791,7 @@ export const R: GlyphDefinition = {
   },
 };
 
-// S — S-curve, balanced
+// S — Two bowls with horizontal terminals, stroke geometry
 export const S: GlyphDefinition = {
   unicode: 0x0053,
   name: 'S',
@@ -778,25 +803,60 @@ export const S: GlyphDefinition = {
     const capHeight = p.capHeight;
     const overshoot = p.overshoot;
 
-    const width = capHeight * 0.8 + sb * 2;
+    const width = capHeight * 0.72 + sb * 2;
     const cx = width / 2;
-    const cy = capHeight / 2;
     const k = 0.5522847498;
 
-    // Upper bowl
-    const topY = capHeight - stem / 2;
-    const midY = capHeight / 2;
-    const botY = stem / 2;
+    // Upper bowl dimensions
+    const upperRx = (width - sb * 2 - stem * 1.5) / 2;
+    const upperRy = (capHeight * 0.45 - stem) / 2 + overshoot * 0.5;
+    const upperCy = capHeight - upperRy - stem / 2;
 
-    builder
-      .moveTo(cx, topY)
-      .curveTo(cx + (width - sb * 2) / 2 * k, topY, cx + (width - sb * 2) / 2, topY - (topY - midY) * k, cx + (width - sb * 2) / 2, midY);
+    // Lower bowl dimensions  
+    const lowerRx = upperRx;
+    const lowerRy = (capHeight * 0.45 - stem) / 2 + overshoot * 0.5;
+    const lowerCy = lowerRy + stem / 2;
 
-    // Lower bowl
+    // Upper bowl (opens on right)
+    const topY = capHeight;
+    const waistY = capHeight * 0.52;
+
+    // Upper bowl outer - starts from top, goes around to waist
     builder
-      .curveTo(cx + (width - sb * 2) / 2, midY - (midY - botY) * k, cx + (width - sb * 2) / 2 * k, botY, cx, botY)
-      .curveTo(cx - (width - sb * 2) / 2 * k, botY, cx - (width - sb * 2) / 2, botY + (midY - botY) * k, cx - (width - sb * 2) / 2, midY)
-      .curveTo(cx - (width - sb * 2) / 2, midY + (topY - midY) * k, cx - (width - sb * 2) / 2 * k, topY, cx, topY);
+      .moveTo(cx - upperRx * 0.3, topY)
+      .curveTo(cx - upperRx, topY, cx - upperRx, upperCy, cx - upperRx * 0.5, upperCy - upperRy * 0.3)
+      .curveTo(cx, upperCy - upperRy, cx + upperRx * 0.5, upperCy - upperRy, cx + upperRx * 0.8, upperCy);
+    builder.lineTo(cx + upperRx * 0.5, waistY);
+
+    // Upper bowl inner
+    const innerUpperRx = upperRx - stem;
+    const innerUpperRy = upperRy - stem;
+    builder
+      .lineTo(cx + innerUpperRx * 0.6, waistY)
+      .curveTo(cx + innerUpperRx, upperCy, cx, upperCy - innerUpperRy, cx - innerUpperRx * 0.5, upperCy - innerUpperRy * 0.3)
+      .curveTo(cx - innerUpperRx, upperCy, cx - innerUpperRx, topY, cx - innerUpperRx * 0.3, topY);
+    builder.lineTo(cx - upperRx * 0.3 + stem, topY);
+    builder.closePath();
+
+    // Lower bowl (opens on left, connects at waist)
+    const botY = 0;
+
+    // Lower bowl outer
+    builder
+      .moveTo(cx + lowerRx * 0.3, botY)
+      .curveTo(cx + lowerRx, botY, cx + lowerRx, lowerCy, cx + lowerRx * 0.5, lowerCy + lowerRy * 0.3)
+      .curveTo(cx, lowerCy + lowerRy, cx - lowerRx * 0.5, lowerCy + lowerRy, cx - lowerRx * 0.8, lowerCy);
+    builder.lineTo(cx - lowerRx * 0.5, waistY);
+
+    // Lower bowl inner
+    const innerLowerRx = lowerRx - stem;
+    const innerLowerRy = lowerRy - stem;
+    builder
+      .lineTo(cx - innerLowerRx * 0.6, waistY)
+      .curveTo(cx - innerLowerRx, lowerCy, cx, lowerCy + innerLowerRy, cx + innerLowerRx * 0.5, lowerCy + innerLowerRy * 0.3)
+      .curveTo(cx + innerLowerRx, lowerCy, cx + innerLowerRx, botY, cx + innerLowerRx * 0.3, botY);
+    builder.lineTo(cx + lowerRx * 0.3 - stem, botY);
+    builder.closePath();
 
     S.advanceWidth = width;
     return builder.build();
@@ -905,7 +965,7 @@ export const V: GlyphDefinition = {
   },
 };
 
-// W — Double V
+// W — Double V with consistent stroke width
 export const W: GlyphDefinition = {
   unicode: 0x0057,
   name: 'W',
@@ -915,39 +975,43 @@ export const W: GlyphDefinition = {
     const sb = p.sidebearing;
     const stem = p.weight;
     const capHeight = p.capHeight;
-    const round = p.terminalRound || 4;
 
-    const width = capHeight * 1.3 + sb * 2;
-    const midX1 = width * 0.25;
-    const midX2 = width * 0.75;
-    const apexY = 0;
+    const width = capHeight * 1.25 + sb * 2;
+    const apexY = stem;
+    const topY = capHeight;
+    
+    const leftX = sb;
+    const midLeftX = width * 0.28;
+    const centerX = width * 0.5;
+    const midRightX = width * 0.72;
+    const rightX = width - sb;
 
-    // First left diagonal
-    builder.moveTo(sb + stem, capHeight - round);
-    builder.lineTo(midX1 - stem / 2, apexY);
-    builder.lineTo(midX1 + stem / 2, apexY);
-    builder.lineTo(sb + stem * 2, capHeight - round);
+    // First left diagonal (left outer)
+    builder.moveTo(leftX, topY);
+    builder.lineTo(leftX + stem, topY);
+    builder.lineTo(midLeftX + stem / 2, apexY);
+    builder.lineTo(midLeftX - stem / 2, apexY);
     builder.closePath();
 
-    // Inner left diagonal (up)
-    builder.moveTo(midX1 + stem / 2, apexY);
-    builder.lineTo(width / 2 - stem / 2, capHeight * 0.5);
-    builder.lineTo(width / 2 + stem / 2, capHeight * 0.5);
-    builder.lineTo(midX1 - stem / 2, apexY);
+    // Second diagonal (inner left going up)
+    builder.moveTo(midLeftX - stem / 2, apexY);
+    builder.lineTo(midLeftX + stem / 2, apexY);
+    builder.lineTo(centerX + stem / 2, topY * 0.45);
+    builder.lineTo(centerX - stem / 2, topY * 0.45);
     builder.closePath();
 
-    // Inner right diagonal (down)
-    builder.moveTo(width / 2 + stem / 2, capHeight * 0.5);
-    builder.lineTo(midX2 - stem / 2, apexY);
-    builder.lineTo(midX2 + stem / 2, apexY);
-    builder.lineTo(width / 2 - stem / 2, capHeight * 0.5);
+    // Third diagonal (inner right going down)
+    builder.moveTo(centerX - stem / 2, topY * 0.45);
+    builder.lineTo(centerX + stem / 2, topY * 0.45);
+    builder.lineTo(midRightX + stem / 2, apexY);
+    builder.lineTo(midRightX - stem / 2, apexY);
     builder.closePath();
 
-    // Final right diagonal (up)
-    builder.moveTo(midX2 + stem / 2, apexY);
-    builder.lineTo(width - sb - stem, capHeight - round);
-    builder.lineTo(width - sb, capHeight - round);
-    builder.lineTo(midX2 - stem / 2, apexY);
+    // Fourth diagonal (right outer going up)
+    builder.moveTo(midRightX - stem / 2, apexY);
+    builder.lineTo(midRightX + stem / 2, apexY);
+    builder.lineTo(rightX - stem, topY);
+    builder.lineTo(rightX, topY);
     builder.closePath();
 
     W.advanceWidth = width;

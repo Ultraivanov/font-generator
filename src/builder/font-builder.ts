@@ -1,14 +1,20 @@
 import opentype from 'opentype.js';
 import { FontConfig, GlyphDefinition, GlyphParams } from '../types.js';
 import { toOpenTypePath, calculateBoundingBox } from '../core/opentype-converter.js';
+// Component-based glyph system (new industrial grade)
+import { lowercase as lowercaseComponents } from '../glyphs/lowercase-component.js';
+import { uppercase as uppercaseComponents } from '../glyphs/uppercase-component.js';
+
+// Legacy glyph sets (fallback)
 import { lowercase } from '../glyphs/lowercase-brockmann.js';
 import { uppercase } from '../glyphs/uppercase-brockmann.js';
 import { italic } from '../glyphs/italic-brockmann.js';
 import { numbers, tabularNumbers } from '../glyphs/numbers.js';
 import { punctuation } from '../glyphs/punctuation.js';
-import { cyrillic } from '../glyphs/cyrillic.js';
-import { hebrew } from '../glyphs/hebrew.js';
-import { generateKerningTable, kerningPairs } from '../core/kerning.js';
+
+// Class-based kerning system
+import { generateClassBasedKerning, debugKernClasses } from '../core/kerning-classes.js';
+import { generateKerningTable } from '../core/kerning.js';
 
 // Font builder: compiles glyph definitions into OpenType font
 
@@ -32,9 +38,9 @@ export class FontBuilder {
       path: new opentype.Path(),
     });
 
-    // Register Brockmann-style glyph sets
-    this.registerSet(uppercase);
-    this.registerSet(lowercase);
+    // Register component-based glyph sets (new industrial system)
+    this.registerSet(uppercaseComponents);
+    this.registerSet(lowercaseComponents);
     this.registerSet(italic);
     this.registerSet(numbers);
     this.registerSet(tabularNumbers);
@@ -95,15 +101,22 @@ export class FontBuilder {
       glyphs: otGlyphs,
     });
 
+    // Generate class-based kerning pairs from built glyphs
+    const glyphChars: string[] = [];
+    for (const [unicode] of this.glyphs) {
+      glyphChars.push(String.fromCharCode(unicode));
+    }
+    const kerningPairs = generateClassBasedKerning(glyphChars);
+    
     // Apply kerning pairs (opentype.js stores this in the kern table)
-    if (font.tables && font.tables.kern) {
+    if (font.tables && font.tables.kern && kerningPairs.length > 0) {
       font.tables.kern = {
         nTables: 1,
         kernTables: [{
           version: 0,
           nPairs: kerningPairs.length,
           coverage: 1,
-          pairs: kerningPairs.map(pair => ({
+          pairs: kerningPairs.map((pair: { left: string; right: string; value: number }) => ({
             left: pair.left,
             right: pair.right,
             value: pair.value,
