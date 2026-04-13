@@ -38,10 +38,10 @@ console.log('✓ Brockmann-Italic.otf generated (400 italic)');
 
 console.log('\n📁 Output: ./output/');
 console.log('\n📝 Character Set:');
-console.log('   • Uppercase: H, O, C, G (squarish proportions)');
-console.log('   • Lowercase: n, o, a, c, e (open apertures)');
-console.log('   • Italic: H, O, n, o (9° slant, constructive)');
-console.log('   • Numbers: 0-9');
+console.log('   • Uppercase: A-Z (26 glyphs, squarish proportions)');
+console.log('   • Lowercase: a-z (26 glyphs, open apertures)');
+console.log('   • Italic: selective glyphs (9° slant, constructive)');
+console.log('   • Numbers: 0-9 (10 glyphs)');
 console.log('   • Punctuation: basic + € $ £ ← →');
 console.log('\n✨ Design Features:');
 console.log('   • Square-circle geometry (not perfect circles)');
