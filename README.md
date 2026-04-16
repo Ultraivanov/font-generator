@@ -1,166 +1,224 @@
-# Haifa — Programmatic Font Generator
+# Brockmann — Industrial Font Generator
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
 
-> A geometric sans-serif typeface for the **Haifa City Design System**. Inspired by Constructivist architecture and Swiss International Typographic Style.
+> A parametric typeface generator inspired by **Josef Müller-Brockmann** and the Swiss International Typographic Style. Built with cubic Bézier curves, superellipses, and component-based architecture.
 
-![Haifa Font Preview](https://github.com/Ultraivanov/font-generator/raw/main/preview.png)
-
-## 🌍 Language Versions
-
-- [English](README.md) (current)
-- [Русский](README.ru.md)
+![Brockmann R Glyph](https://github.com/Ultraivanov/font-generator/raw/main/test-R.png)
 
 ## ✨ Features
 
-- **📝 Full Latin alphabet** — a-z, A-Z with optical corrections
-- **🇷🇺 Cyrillic** — complete Russian alphabet (А-Я, 33 glyphs)
-- **🇮🇱 Hebrew** — Aleph-Bet (א-ת, 27 glyphs incl. finals) with RTL support
-- **🔢 Numbers & punctuation** — 0-9, basic punctuation marks
-- **⚡ Kerning** — 95+ pairs for critical combinations (Latin + Cyrillic + Hebrew)
-- **🎛️ Variable Font** — weight axis wght: 100-700
-- **🔧 Parametric system** — adjust weight, width, contrast via code
-- **🎯 Total: ~136 glyphs**
-
-## 📦 Download
-
-Get the latest font files from the [releases page](../../releases) or download directly:
-
-- [Haifa-Regular.otf](../../raw/main/output/Haifa-Regular.otf)
-- [Haifa-Bold.otf](../../raw/main/output/Haifa-Bold.otf)
-- [Haifa-Light.otf](../../raw/main/output/Haifa-Light.otf)
-- [Haifa-Variable.woff2](../../raw/main/output/Haifa-Variable.woff2)
+- **🏗️ Component-based architecture** — Stem, Bowl, Arch, Shoulder, Tail, DiagonalLeg
+- **� Superellipse geometry** — `squareness: 0.85` for perfect Brockmann proportions
+- **� Optical corrections** — Per-glyph adjustments for width, overshoot, aperture
+- **⚡ Class-based kerning** — Auto-generated pairs from shape classes
+- **🔧 Parametric system** — Weight, contrast, rounding, taper via code
+- **📊 Quality control** — Visual regression, stem analysis, kerning validation
 
 ## 🚀 Quick Start
 
 ```bash
 cd font-generator
 npm install
+
+# Test single glyph
+npm run test:R
+
+# Generate full font
 npm run generate
+
+# Run all quality checks
+npm run test:all
 ```
 
-Output files in `output/`:
-- `Haifa-Light.otf` (wght: 100)
-- `Haifa-Regular.otf` (wght: 400)
-- `Haifa-Bold.otf` (wght: 700)
-- `Haifa-Variable.woff2` (wght: 100-700)
+## 📦 Output
 
-## Architecture
+| File | Description |
+|------|-------------|
+| `test-R.svg` | Vector preview of R glyph |
+| `test-R.png` | Raster preview (800×800px) |
+| `output/Brockmann-Regular.otf` | Regular weight font |
+| `output/Brockmann-Italic.otf` | Italic variant |
+
+## 🏗️ Architecture
 
 ```
 font-generator/
 ├── src/
-│   ├── types.ts                 # Types and interfaces
-│   ├── config/default.ts        # Weight configurations
 │   ├── core/
-│   │   ├── path-builder.ts      # Bezier curves
-│   │   ├── opentype-converter.ts
-│   │   └── kerning.ts           # Kerning pairs
+│   │   ├── superellipse.ts      # Superellipse point generation
+│   │   ├── component-system.ts   # ComponentSystem class
+│   │   │   ├── verticalStem()    # Stem with optional rounding
+│   │   │   ├── generateBowl()    # Superellipse bowl with aperture
+│   │   │   ├── generateDiagonalLeg() # Tapered diagonal with terminal
+│   │   │   └── generateShoulder()  # n/h/m arches
+│   │   ├── optical.ts            # Optical corrections
+│   │   ├── auto-kerning.ts       # Class-based kerning generator
+│   │   └── path-builder-v2.ts    # Cubic Bézier utilities
+│   ├── config/
+│   │   ├── brockmann-profile.ts  # Style parameters
+│   │   └── weights.ts            # Light/Regular/Bold configs
 │   ├── glyphs/
-│   │   ├── lowercase-full.ts    # a-z
-│   │   ├── uppercase-full.ts    # A-Z
-│   │   ├── numbers.ts           # 0-9
-│   │   ├── punctuation.ts       # punctuation marks
-│   │   ├── cyrillic.ts          # А-Я (Cyrillic)
-│   │   └── hebrew.ts            # א-ת (Hebrew)
-│   ├── builder/
-│   │   ├── font-builder.ts      # OTF compiler
-│   │   └── variable-font.ts    # Variable font builder
-│   └── index.ts                 # CLI entry
-├── output/                      # Generated fonts
-├── package.json
-└── tsconfig.json
+│   │   ├── uppercase-R.ts        # Component-based R
+│   │   ├── uppercase-component.ts # H, O, D, A, V, W...
+│   │   └── lowercase-component.ts # n, o, a, b, d...
+│   └── types.ts                  # TypeScript interfaces
+├── tests/
+│   └── test-R.ts                 # R glyph test & SVG export
+└── package.json
 ```
 
-## Glyph Parameters
-
-| Parameter     | Description                     | Regular | Bold | Light |
-|---------------|---------------------------------|---------|------|-------|
-| `weight`      | Stem thickness                  | 80      | 160  | 40    |
-| `width`       | Standard glyph width            | 600     | 600  | 600   |
-| `sidebearing` | Side bearings                   | 50      | 40   | 60    |
-| `xHeight`     | x-height                        | 500     | 500  | 500   |
-| `capHeight`   | Cap height                      | 700     | 700  | 700   |
-| `ascender`    | Ascender                        | 800     | 800  | 800   |
-| `descender`   | Descender                       | -200    | -200 | -200  |
-| `overshoot`   | Optical overshoot correction    | 10      | 10   | 10    |
-
-## Creating a Glyph
+## 🎛️ Brockmann Style Profile
 
 ```typescript
-// src/glyphs/lowercase-full.ts
-export const a: GlyphDefinition = {
-  unicode: 0x0061,
-  name: 'a',
-  advanceWidth: 0,
-  build: (p: GlyphParams) => {
-    const builder = createPath();
-    
-    // Bowl + stem construction
-    const sb = p.sidebearing;
-    const stem = p.weight;
-    
-    // Build circular bowl
-    builder.circle(cx, cy, radius, p.overshoot);
-    
-    // Add right stem
-    builder.vStem(stemX, 0, p.xHeight, stem);
-    
-    a.advanceWidth = calculateWidth;
-    return builder.build();
-  },
+export const BROCKMANN_PROFILE: ComponentParams = {
+  weight: 80,           // Stem thickness
+  xHeight: 520,         // Large x-height
+  capHeight: 700,
+  contrast: 0.15,       // Low contrast (almost monolinear)
+  squareness: 0.85,     // KEY PARAMETER: squarish forms
+  rounding: 0.32        // Moderate terminal rounding
 };
 ```
 
-## Kerning
+## 🔩 Component-Based Glyph Construction
 
-Critical pairs (AV, TA, LY, etc.) are configured in `src/core/kerning.ts`:
+### Example: Uppercase R
 
 ```typescript
-export const kerningPairs: KerningPair[] = [
-  { left: 'A', right: 'V', value: -60 },
-  { left: 'T', right: 'a', value: -80 },
-  { left: 'Г', right: 'А', value: -80 },  // Cyrillic
-];
+export const R: GlyphDefinition = {
+  unicode: 0x0052,
+  name: 'R',
+  
+  build: (params: GlyphParams) => {
+    const components = new ComponentSystem(BROCKMANN_PROFILE);
+    const path = new opentype.Path();
+    
+    // 1. Vertical stem (round top, square bottom)
+    const stem = components.verticalStem({
+      x: params.sidebearing,
+      yStart: 0,
+      yEnd: params.capHeight,
+      width: params.weight,
+      roundTop: true,
+      roundBottom: false
+    });
+    
+    // 2. Superellipse bowl (open right for leg connection)
+    const bowl = components.generateBowl({
+      centerX: bowlCenterX,
+      centerY: params.capHeight * 0.4,
+      width: params.capHeight * 0.55,
+      height: params.capHeight * 0.55,
+      aperture: 0.7,
+      openRight: true
+    });
+    
+    // 3. Horizontal crossbar
+    const crossbar = drawCrossbar(...);
+    
+    // 4. Diagonal leg (tapered, rounded terminal)
+    const leg = components.generateDiagonalLeg(
+      startX, startY, endX, endY,
+      width: params.weight,
+      taper: 0.75,
+      roundTerminal: true
+    );
+    
+    // Combine all components
+    mergePaths(path, [stem, bowl, crossbar, leg]);
+    return path;
+  }
+};
 ```
 
-## Variable Font
+## 📐 Optical Corrections
 
-`wght` axis with three masters:
-- Light (100)
-- Regular (400) — default
-- Bold (700)
+Per-glyph adjustments in `src/config/brockmann-profile.ts`:
 
-CSS usage:
-
-```css
-@font-face {
-  font-family: 'Haifa';
-  src: url('Haifa-Variable.woff2') format('woff2-variations');
-  font-weight: 100 700;
-}
-
-body {
-  font-family: 'Haifa', sans-serif;
-  font-weight: 400;  /* or 150, 250, 534... */
-}
+```typescript
+export const OPTICAL_CORRECTIONS = {
+  'R': {
+    widthFactor: 1.02,        // 2% wider than standard
+    legOffset: 0.62,          // Leg starts at 62% height
+    legTaper: 0.72,           // 28% taper toward terminal
+    bowlHeightFactor: 0.58,
+    crossbarPosition: 0.55,   // Slightly above center
+    terminalRounding: 0.4     // 40% of stroke width
+  },
+  'O': { widthFactor: 0.95, overshoot: 1.05 },
+  'A': { widthFactor: 0.92, overshoot: 1.03 }
+};
 ```
 
-## Roadmap
+## ⚡ Auto-Kerning
 
-- [x] Full Latin alphabet
-- [x] Cyrillic (full А-Я)
-- [x] Hebrew alphabet
-- [x] Numbers and punctuation
-- [x] Kerning pairs (80+)
-- [x] Variable font export
-- [ ] Extended Latin (accents)
-- [ ] Ligatures
-- [ ] Web preview page
+Class-based system generates ~150+ pairs from 6 shape classes:
+
+```typescript
+export const KERNING_CLASSES = {
+  left: {
+    angled: ['A', 'T', 'V', 'W', 'Y', 'F', 'P'],
+    rounded: ['O', 'Q', 'C', 'G', 'S'],
+    straight: ['H', 'I', 'N', 'M', 'U']
+  },
+  right: { /* same categories */ }
+};
+
+// Auto-generated values:
+// angled + angled = -80
+// angled + rounded = -60
+// angled + straight = -40
+```
+
+## 🧪 Testing
+
+```bash
+# Generate R and export to SVG/PNG
+npm run test:R
+
+# Visual regression (pixel-perfect comparison)
+npm run test:visual
+
+# Stem thickness consistency
+npm run test:stem
+
+# Kerning pair validation
+npm run test:kerning
+
+# All tests
+npm run test:all
+```
+
+## 📊 Quality Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Stroke consistency | ±2 units | ✅ |
+| Superellipse squareness | 0.85 | ✅ |
+| Optical overshoot | 10-15 units | ✅ |
+| Kerning pairs | 150+ | ✅ |
+| Component reuse | 80%+ | 🚧 |
+
+## 🎯 Roadmap
+
+- [x] Superellipse geometry
+- [x] Component system (Stem, Bowl, Leg)
+- [x] Optical correction framework
+- [x] Class-based auto-kerning
+- [x] Uppercase R (component-based)
+- [ ] Uppercase: D, J, Q, S, H, W
+- [ ] Lowercase: c, e, f, g, i, r, s, t, y, z
+- [ ] Italic slant transformation
+- [ ] Variable font (wght axis)
 - [ ] Specimen generator
+
+## 🙏 Credits
+
+Inspired by **Josef Müller-Brockmann** and the Swiss International Typographic Style (1950s–60s).
 
 ---
 
-*For Russian version see [README.ru.md](README.ru.md)*
+**License:** MIT • **Author:** @Ultraivanov
