@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brockmann R — Component Preview</title>
+  <style>
+    @font-face {
+      font-family: 'Brockmann';
+      src: url('./output/Brockmann-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .subtitle {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 40px;
+    }
+    
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    
+    .preview-card {
+      background: white;
+      border-radius: 8px;
+      padding: 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #999;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .glyph-display {
+      font-family: 'Brockmann', sans-serif;
+      font-size: 320px;
+      line-height: 1;
+      text-align: center;
+      color: #111;
+      margin: 20px 0;
+    }
+    
+    .glyph-display.italic {
+      font-style: italic;
+    }
+    
+    .size-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    
+    .size-cell {
+      text-align: center;
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 4px;
+    }
+    
+    .size-cell .char {
+      font-family: 'Brockmann', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: #111;
+    }
+    
+    .size-cell .label {
+      font-size: 10px;
+      color: #999;
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+      font-size: 12px;
+    }
+    
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .metric-label {
+      color: #999;
+    }
+    
+    .metric-value {
+      color: #333;
+      font-family: 'SF Mono', monospace;
+    }
+    
+    @media (max-width: 768px) {
+      .preview-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .glyph-display {
+        font-size: 200px;
+      }
+      
+      .size-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Brockmann Glyph Set</h1>
+    <div class="subtitle">Component-based Industrial Font Generator</div>
+    
+    <div class="preview-grid">
+      <div class="preview-card">
+        <div class="card-title">Regular — Uppercase R</div>
+        <div class="glyph-display">R</div>
+        
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-label">Unicode</span>
+            <span class="metric-value">U+0052</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Weight</span>
+            <span class="metric-value">80 units</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Cap Height</span>
+            <span class="metric-value">700</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Squareness</span>
+            <span class="metric-value">0.85</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Leg Offset</span>
+            <span class="metric-value">62%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Terminal Round</span>
+            <span class="metric-value">40%</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="preview-card">
+        <div class="card-title">Italic — Uppercase R</div>
+        <div class="glyph-display italic">R</div>
+        
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-label">Slant Angle</span>
+            <span class="metric-value">11°</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Cursive Offset</span>
+            <span class="metric-value">8%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Weight</span>
+            <span class="metric-value">80 units</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Squareness</span>
+            <span class="metric-value">0.85</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Leg Taper</span>
+            <span class="metric-value">72%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Aperture</span>
+            <span class="metric-value">70%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-card" style="margin-top: 40px;">
+      <div class="card-title">Size Matrix</div>
+      <div class="size-grid">
+        <div class="size-cell">
+          <div class="char">R</div>
+          <div class="label">16px</div>
+        </div>
+        <div class="size-cell">
+          <div class="char" style="font-size: 24px;">R</div>
+          <div class="label">24px</div>
+        </div>
+        <div class="size-cell">
+          <div class="char" style="font-size: 32px;">R</div>
+          <div class="label">32px</div>
+        </div>
+        <div class="size-cell">
+          <div class="char" style="font-size: 48px;">R</div>
+          <div class="label">48px</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="preview-card" style="margin-top: 40px;">
+      <div class="card-title">Component Architecture</div>
+      <div style="font-family: 'SF Mono', monospace; font-size: 12px; line-height: 1.8; color: #555;">
+        <div style="margin-bottom: 16px; padding: 16px; background: #f8f8f8; border-radius: 4px;">
+          <strong>R.build()</strong> → Composite of 4 components:
+          <br>├── <strong>verticalStem()</strong> — main spine (roundTop=true)
+          <br>├── <strong>generateBowl()</strong> — superellipse bowl (aperture=0.7)
+          <br>├── <strong>horizontalBar()</strong> — crossbar at 58% height
+          <br>└── <strong>generateDiagonalLeg()</strong> — tapered leg (taper=0.75, roundTerminal)
+        </div>
+        <div style="padding: 16px; background: #f8f8f8; border-radius: 4px;">
+          <strong>Parameters:</strong>
+          <br>squareness: 0.85 | rounding: 0.32 | contrast: 0.15
+          <br>legOffset: 62% | legTaper: 72% | terminalRounding: 40%
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
